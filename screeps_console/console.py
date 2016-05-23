@@ -6,6 +6,7 @@ import json
 import os
 import re
 from screeps import ScreepsConnection
+from time import sleep
 import websocket
 import sys
 import yaml
@@ -85,8 +86,8 @@ class ScreepsConsole(object):
 
                     # Replace html tab entity with actual tabs
                     line = line.replace('&#09;', "\t")
-
                     print color + TAG_RE.sub('', line) + Style.RESET_ALL
+                    sleep(0.02) # sleep for smoother scrolling
             return
 
         print('on_message', message)
