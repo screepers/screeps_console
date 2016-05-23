@@ -52,42 +52,54 @@ class ScreepsConsole(object):
 
         if 'messages' in data[1]:
             if 'log' in data[1]['messages']:
+
+                message_count = len(data[1]['messages']['log'])
+
+                # Make sure the delay doesn't cause an overlap into other ticks
+                message_delay = 1.0 / message_count
+                if message_delay > 0.10:
+                    message_delay = 0.10
+
                 for line in data[1]['messages']['log']:
 
                     # Extract severity from html tag
-                    try:
-                        match_return = SEVERITY_RE.match(line)
-                        groups = match_return.groups()
-                        if len(groups) > 0:
-                            severity = int(groups[0])
-                        else:
-                            severity = 3
-                    except:
+                    if '<' in line:
+                        try:
+                            match_return = SEVERITY_RE.match(line)
+                            groups = match_return.groups()
+                            if len(groups) > 0:
+                                severity = int(groups[0])
+                            else:
+                                severity = false
+                        except:
+                            severity = false
+                    else:
                         severity = 3
 
                     # Add color based on severity
                     if 'severity' not in locals():
                         severity = 3
+
                     if severity == 0:
-                        color = Style.DIM + Fore.BLUE
+                        color = Style.DIM + Fore.WHITE
                     elif severity == 1:
                         color = Style.NORMAL + Fore.BLUE
                     elif severity == 2:
-                        color = Style.BRIGHT + Fore.BLUE
+                        color = Style.NORMAL + Fore.CYAN
                     elif severity == 3:
-                        color = Style.BRIGHT + Fore.WHITE
+                        color = Style.NORMAL + Fore.WHITE
                     elif severity == 4:
                         color = Style.NORMAL + Fore.RED
                     elif severity == 5:
-                        color = Style.BRIGHT + Fore.RED
+                        color = Style.NORMAL + Fore.BLACK + Back.RED
                     else:
-                        color = Style.NORMAL + Fore.RED
+                        color = Style.NORMAL + Fore.BLACK + Back.YELLOW
 
 
                     # Replace html tab entity with actual tabs
                     line = line.replace('&#09;', "\t")
                     print color + TAG_RE.sub('', line) + Style.RESET_ALL
-                    sleep(0.02) # sleep for smoother scrolling
+                    sleep(message_delay) # sleep for smoother scrolling
             return
 
         print('on_message', message)
