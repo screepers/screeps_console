@@ -1,0 +1,8 @@
+
+# Copy this to .settings.yaml and fill it out.
+
+# Screeps account info
+screeps_username:
+screeps_password:
+screeps_ptr: false
+
