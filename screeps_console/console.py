@@ -54,17 +54,24 @@ class ScreepsConsole(object):
         data = json.loads(message)
 
         if 'messages' in data[1]:
+            stream = []
+
             if 'log' in data[1]['messages']:
+                stream = stream + data[1]['messages']['log']
 
-                message_count = len(data[1]['messages']['log'])
+            if 'results' in data[1]['messages']:
+                stream = stream + data[1]['messages']['results']
 
+
+            message_count = len(stream)
+
+            if message_count > 0:
                 # Make sure the delay doesn't cause an overlap into other ticks
                 message_delay = 1.0 / message_count
                 if message_delay > 0.10:
                     message_delay = 0.10
 
-                for line in data[1]['messages']['log']:
-
+                for line in stream:
                     if self.format == 'color':
                         line_parsed = parseLine(line)
                     elif self.format == 'json':
@@ -76,7 +83,6 @@ class ScreepsConsole(object):
                     sleep(message_delay) # sleep for smoother scrolling
             return
         else:
-
             if 'error' in data[1]:
                 #line = '<'+data[1]['error']
                 line = "<severity=\"5\">" + data[1]['error'] + "</font>"
