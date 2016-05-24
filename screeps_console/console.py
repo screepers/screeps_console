@@ -1,24 +1,27 @@
 #!/usr/bin/env python
 
-import colorama
-from colorama import Fore, Back, Style
+from base64 import b64decode
+import getopt
+from gzip import GzipFile
 import json
-import os
-import re
+import logging
+from outputparser import parseLine
+from outputparser import tagLine
 from screeps import ScreepsConnection
+from settings import getSettings
 from time import sleep
 import websocket
 import sys
-import yaml
 
-colorama.init()
 
 class ScreepsConsole(object):
 
-    def __init__(self, user, password, ptr=False):
+    def __init__(self, user, password, ptr=False, logging=False):
+        self.format = 'color'
         self.user = user
         self.password = password
         self.ptr = ptr
+        self.logging = False
 
     def on_message(self, ws, message):
         print message
@@ -45,8 +48,8 @@ class ScreepsConsole(object):
         if (message.startswith('time')):
             return
 
-        SEVERITY_RE = re.compile(r'<.*severity="(\d)">')
-        TAG_RE = re.compile(r'<[^>]+>')
+        if (message.startswith('gz')):
+            message = GzipFile(fileobj=StringIO(b64decode(message[3:])))
 
         data = json.loads(message)
 
@@ -62,52 +65,48 @@ class ScreepsConsole(object):
 
                 for line in data[1]['messages']['log']:
 
-                    # Extract severity from html tag
-                    if '<' in line:
-                        try:
-                            match_return = SEVERITY_RE.match(line)
-                            groups = match_return.groups()
-                            if len(groups) > 0:
-                                severity = int(groups[0])
-                            else:
-                                severity = false
-                        except:
-                            severity = false
+                    if self.format == 'color':
+                        line_parsed = parseLine(line)
+                    elif self.format == 'json':
+                        line_parsed = json.dumps(line)
                     else:
-                        severity = 3
+                        line_parsed = tagLine(line)
 
-                    # Add color based on severity
-                    if 'severity' not in locals():
-                        severity = 3
-
-                    if severity == 0:
-                        color = Style.DIM + Fore.WHITE
-                    elif severity == 1:
-                        color = Style.NORMAL + Fore.BLUE
-                    elif severity == 2:
-                        color = Style.NORMAL + Fore.CYAN
-                    elif severity == 3:
-                        color = Style.NORMAL + Fore.WHITE
-                    elif severity == 4:
-                        color = Style.NORMAL + Fore.RED
-                    elif severity == 5:
-                        color = Style.NORMAL + Fore.BLACK + Back.RED
-                    else:
-                        color = Style.NORMAL + Fore.BLACK + Back.YELLOW
-
-
-                    # Replace html tab entity with actual tabs
-                    line = line.replace('&#09;', "\t")
-                    print color + TAG_RE.sub('', line) + Style.RESET_ALL
+                    print line_parsed
                     sleep(message_delay) # sleep for smoother scrolling
             return
+        else:
+
+            if 'error' in data[1]:
+                #line = '<'+data[1]['error']
+                line = "<severity=\"5\">" + data[1]['error'] + "</font>"
+                if self.format == 'color':
+                    line_parsed = parseLine(line)
+                elif self.format == 'json':
+                    line_parsed = json.dumps(line)
+                else:
+                    line_parsed = tagLine(line)
+
+                print line_parsed
+                return
+            else:
+                print 'undiscovered protocol feature'
+                print json.dumps(message)
 
         print('on_message', message)
 
 
     def connect(self):
+
+        if self.logging:
+            logging.getLogger('websocket').addHandler(logging.StreamHandler())
+            websocket.enableTrace(True)
+        else:
+            logging.getLogger('websocket').addHandler(logging.NullHandler())
+            websocket.enableTrace(False)
+
         url = 'wss://screeps.com/socket/websocket'
-        #websocket.enableTrace(True)
+
         ws = websocket.WebSocketApp(url=url,
                                     on_message=self.on_message,
                                     on_error=self.on_error,
@@ -119,22 +118,16 @@ class ScreepsConsole(object):
         self.connect()
 
 
-
-def getSettings():
-    if not getSettings.settings:
-        cwd = os.getcwd()
-        path = cwd + '/.settings.yaml'
-        if not os.path.isfile(path):
-            print 'no settings file found'
-            sys.exit(-1)
-            return False
-        with open(path, 'r') as f:
-            getSettings.settings = yaml.load(f)
-    return getSettings.settings
-getSettings.settings = False
-
-
 if __name__ == "__main__":
+
+    opts, args = getopt.getopt(sys.argv[1:], "hi:o:",["ifile=","ofile="])
     settings = getSettings()
     screepsconsole = ScreepsConsole(user=settings['screeps_username'], password=settings['screeps_password'], ptr=settings['screeps_ptr'])
+
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'interactive':
+            screepsconsole.format = 'tag'
+        if sys.argv[1] == 'json':
+            screepsconsole.format = 'json'
+
     screepsconsole.start()
