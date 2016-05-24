@@ -3,6 +3,9 @@
 This project streams the Screeps console output to the terminal. It strips out
 any html tags and adds colors.
 
+![Screeps Interactive Console](docs/screenshot.png?raw=true "Screeps Interactive Console")
+
+
 ## Settings
 
 The settings file is a yaml file. Begin by copying the settings.dist file to
