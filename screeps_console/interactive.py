@@ -26,6 +26,8 @@ class ScreepsInteractiveConsole:
         ('logged_input', 'dark magenta', 'black'),
         ('logged_response', 'light magenta', 'black'),
         ('error', 'yellow', 'dark red'),
+        ('bg', 'dark blue', 'black'),
+        ('default', 'light blue', 'black'),
 
         ('severity0', 'light gray', 'black'),
         ('severity1', 'dark blue', 'black'),
@@ -39,7 +41,8 @@ class ScreepsInteractiveConsole:
 
     def __init__(self):
 
-        self.loop = urwid.MainLoop(self.getFrame(), unhandled_input=self.catch_user_input, palette=self.palette)
+        frame = self.getFrame()
+        self.loop = urwid.MainLoop(urwid.AttrMap(frame, 'bg'), unhandled_input=self.catch_user_input, palette=self.palette)
         console_monitor = ScreepsConsoleMonitor(self.consoleWidget, self.listWalker, self.loop)
         self.loop.run()
 
@@ -98,7 +101,7 @@ class ScreepsInteractiveConsole:
         return
 
     def getWelcomeMessage(self):
-        return urwid.Text(('welcome_message', 'Welcome to the Screeps Interactive Console'))
+        return urwid.Text(('default', 'Welcome to the Screeps Interactive Console'))
 
 
     def getApiClient(self):
