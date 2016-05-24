@@ -142,6 +142,8 @@ class ScreepsConsoleMonitor:
                     formatting = 'logged_response'
                 elif log_type == 'highlight':
                     formatting = 'highlight'
+                elif log_type == 'error':
+                    formatting = 'error'
                 else:
                     severity = getSeverity(line)
                     if not severity or severity > 5 or severity < 0:

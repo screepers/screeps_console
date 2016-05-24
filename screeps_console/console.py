@@ -87,7 +87,7 @@ class ScreepsConsole(object):
         else:
             if 'error' in data[1]:
                 #line = '<'+data[1]['error']
-                line = "<severity=\"5\" type='error'>" + data[1]['error'] + "</font>"
+                line = "<severity=\"5\" type=\"error\">" + data[1]['error'] + "</font>"
                 if self.format == 'color':
                     line_parsed = parseLine(line)
                 elif self.format == 'json':
