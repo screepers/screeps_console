@@ -5,6 +5,7 @@ import json
 import os
 from outputparser import getSeverity
 from outputparser import clearTags
+from outputparser import getType
 from screeps import ScreepsConnection
 from settings import getSettings
 import subprocess
@@ -22,14 +23,14 @@ class ScreepsInteractiveConsole:
     palette = [
         ('header', 'bold, white', 'dark gray'),
         ('input', 'white', 'dark blue'),
-        ('logged_input', 'white', 'black'),
-        ('logged_response', 'white', 'black'),
+        ('logged_input', 'dark magenta', 'black'),
+        ('logged_response', 'light magenta', 'black'),
         ('error', 'yellow', 'dark red'),
 
         ('severity0', 'light gray', 'black'),
         ('severity1', 'dark blue', 'black'),
         ('severity2', 'dark cyan', 'black'),
-        ('severity3', 'white', 'black'),
+        ('severity3', 'dark green', 'black'),
         ('severity4', 'light red', 'black'),
         ('severity5', 'yellow', 'dark red'),
         ('highlight', 'black', 'yellow'),
@@ -76,25 +77,28 @@ class ScreepsInteractiveConsole:
 
     def catch_user_input(self, key):
 
-        userInput = self.getEdit()
-        user_text = userInput.get_edit_text()
-        userInput.set_edit_text('')
+        if key == 'enter':
+            userInput = self.getEdit()
+            user_text = userInput.get_edit_text()
+            userInput.set_edit_text('')
 
-        walker = self.getConsoleListWalker()
-        walker.append(urwid.Text(('logged_input', '> ' + user_text)))
+            walker = self.getConsoleListWalker()
+            walker.append(urwid.Text(('logged_input', '> ' + user_text)))
 
-        if len(walker) > 0:
-            self.getConsole().set_focus(len(walker)-1)
+            if len(walker) > 0:
+                self.getConsole().set_focus(len(walker)-1)
 
-        if user_text == 'exit':
-            raise urwid.ExitMainLoop()
+            if user_text == 'exit':
+                raise urwid.ExitMainLoop()
 
-        apiclient = self.getApiClient()
-        result = apiclient.console(user_text)
+            if len(user_text) > 0:
+                apiclient = self.getApiClient()
+                result = apiclient.console(user_text)
+
         return
 
     def getWelcomeMessage(self):
-        return urwid.Text(('welcome_message', ' '))
+        return urwid.Text(('welcome_message', 'Welcome to the Screeps Interactive Console'))
 
 
     def getApiClient(self):
@@ -108,8 +112,6 @@ class ScreepsInteractiveConsole:
 class ScreepsConsoleMonitor:
 
     proc = False
-    console_buffer = ''
-    console_buffer_widgets = []
 
     def __init__(self, widget, walker, loop):
         self.widget = widget
@@ -120,30 +122,35 @@ class ScreepsConsoleMonitor:
     def getProcess(self):
         if self.proc:
             return self.proc
-
         console_path = os.path.join(os.path.dirname(sys.argv[0]), 'console.py ')
         write_fd = self.loop.watch_pipe(self.onUpdate)
-        proc = subprocess.Popen(
+        self.proc = subprocess.Popen(
             [console_path + ' json'],
             stdout=write_fd,
             close_fds=True,
             shell=True)
+        return self.proc
 
     def onUpdate(self, data):
         data_lines = data.rstrip().split('\n')
-
         for line_json in data_lines:
             try:
                 line = json.loads(line_json.strip())
-                severity = getSeverity(line)
-                line = clearTags(line)
-                line = line.replace('&#09;', " ")
+                log_type = getType(line)
 
-                if not severity or severity > 5 or severity < 0:
+                if log_type == 'result':
+                    formatting = 'logged_response'
+                elif log_type == 'highlight':
                     formatting = 'highlight'
                 else:
-                    formatting = 'severity' + str(severity)
+                    severity = getSeverity(line)
+                    if not severity or severity > 5 or severity < 0:
+                        formatting = 'highlight'
+                    else:
+                        formatting = 'severity' + str(severity)
 
+                line = line.replace('&#09;', " ")
+                line = clearTags(line)
                 self.walker.append(urwid.Text((formatting, line)))
                 if len(self.walker) > 0:
                     self.widget.set_focus(len(self.walker)-1)

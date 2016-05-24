@@ -5,6 +5,7 @@ import re
 
 colorama.init()
 SEVERITY_RE = re.compile(r'<.*severity="(\d)">')
+TYPE_RE = re.compile(r'<.*type="([a-zA-Z0-9]*)">')
 TAG_RE = re.compile(r'<[^>]+>')
 
 def parseLine(line):
@@ -37,8 +38,9 @@ def parseLine(line):
 
 def tagLine(line):
     severity = str(getSeverity(line))
+    log_type = getType(line)
     line = clearTags(line)
-    return '<log severity=' + severity + '>' + line + '</log>'
+    return '<log severity="' + severity + '" type="' + log_type + '">' + line + '</log>'
 
 
 def clearTags(line):
@@ -62,3 +64,18 @@ def getSeverity(line):
             return false
     else:
         return 3
+
+
+def getType(line):
+    if '<' in line:
+        try:
+            match_return = TYPE_RE.match(line)
+            groups = match_return.groups()
+            if len(groups) > 0:
+                return groups[0]
+            else:
+                return 'log'
+        except:
+            return 'log'
+    else:
+        return 'log'

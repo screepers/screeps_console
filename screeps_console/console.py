@@ -60,7 +60,9 @@ class ScreepsConsole(object):
                 stream = stream + data[1]['messages']['log']
 
             if 'results' in data[1]['messages']:
-                stream = stream + data[1]['messages']['results']
+                results = data[1]['messages']['results']
+                results = map(lambda x:'<type="result">'+x+'</type>',results)
+                stream = stream + results
 
 
             message_count = len(stream)
@@ -85,7 +87,7 @@ class ScreepsConsole(object):
         else:
             if 'error' in data[1]:
                 #line = '<'+data[1]['error']
-                line = "<severity=\"5\">" + data[1]['error'] + "</font>"
+                line = "<severity=\"5\" type='error'>" + data[1]['error'] + "</font>"
                 if self.format == 'color':
                     line_parsed = parseLine(line)
                 elif self.format == 'json':
