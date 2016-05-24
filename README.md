@@ -26,12 +26,21 @@ screeps_ptr: false
 
 ## Running
 
-To run the program simply call console.py from the directory your local settings
-are in. 
+To stream the console output directly to your terminal's stdout run the
+`console.py` application.
 
 ```bash
 $ ./screeps_console/console.py
 ```
+
+
+This project also offers an interactive shell that can be used for both reading
+console output and sending console commands to the server.
+
+```bash
+$ ./screeps_console/interactive.py
+```
+
 
 ## Colors
 
