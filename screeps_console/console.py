@@ -113,7 +113,10 @@ class ScreepsConsole(object):
             logging.getLogger('websocket').addHandler(logging.NullHandler())
             websocket.enableTrace(False)
 
-        url = 'wss://screeps.com/socket/websocket'
+        if not self.ptr:
+            url = 'wss://screeps.com/socket/websocket'
+        else:
+            url = 'wss://screeps.com/ptr/socket/websocket'
 
         ws = websocket.WebSocketApp(url=url,
                                     on_message=self.on_message,
