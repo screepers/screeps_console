@@ -89,7 +89,7 @@ class ScreepsConsoleMonitor:
 
         # If we lose the connection to the remote system close the console.
         if data.startswith('### closed ###'):
-            self.proc = false
+            self.proc = False
             self.getProcess()
             lostprocess_message = 'reconnecting to server . . .'
             self.walker.append(urwid.Text(('logged_response', lostprocess_message)))
