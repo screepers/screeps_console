@@ -22,21 +22,21 @@ themes = {
   ],
 
   'light':[
-        ('bg',     'dark blue',   'white'),
-        ('header', 'bold, black', 'light gray'),
-        ('input',  'black',       'light cyan'),
+        ('bg',     'dark blue', 'white'),
+        ('header', 'black',     'light gray'),
+        ('input',  'black',     'light gray'),
 
         ('logged_input',    'dark magenta',  'white'),
         ('logged_response', 'light magenta', 'white'),
 
-        ('error',     'yellow',     'light red'),
-        ('default',   'light blue', 'white'),
+        ('error',     'light red',  'yellow'),
+        ('default',   'black',  'white'),
         ('severity0', 'light gray', 'white'),
-        ('severity1', 'dark blue',  'white'),
-        ('severity2', 'dark cyan',  'white'),
-        ('severity3', 'dark green', 'white'),
-        ('severity4', 'light red',  'white'),
-        ('severity5', 'yellow',     'light red'),
+        ('severity1', 'dark gray',  'white'),
+        ('severity2', 'dark blue',  'white'),
+        ('severity3', 'black',      'white'),
+        ('severity4', 'dark red',   'white'),
+        ('severity5', 'light red',  'white'),
         ('highlight', 'black',      'yellow'),
   ],
 

@@ -17,24 +17,6 @@ class ScreepsInteractiveConsole:
     listWalker = False
     userInput = False
 
-    palette = [
-        ('header', 'bold, white', 'dark gray'),
-        ('input', 'white', 'dark blue'),
-        ('logged_input', 'dark magenta', 'black'),
-        ('logged_response', 'light magenta', 'black'),
-        ('error', 'yellow', 'dark red'),
-        ('bg', 'dark blue', 'black'),
-        ('default', 'light blue', 'black'),
-        ('severity0', 'light gray', 'black'),
-        ('severity1', 'dark blue', 'black'),
-        ('severity2', 'dark cyan', 'black'),
-        ('severity3', 'dark green', 'black'),
-        ('severity4', 'light red', 'black'),
-        ('severity5', 'yellow', 'dark red'),
-        ('highlight', 'black', 'yellow'),
-    ]
-
-
     def __init__(self):
 
         frame = self.getFrame()
