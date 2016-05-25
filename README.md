@@ -21,13 +21,14 @@ The settings file is in yaml and takes various authentication tokens.
 # Copy this to .settings.yaml and fill it out.
 
 # Screeps account info
+# Your username is your full email address.
 screeps_username:
 screeps_password:
 screeps_ptr: false
 ```
 
 
-## Running
+## Launching
 
 To stream the console output directly to your terminal's stdout run the
 `console.py` application.
@@ -44,10 +45,23 @@ console output and sending console commands to the server.
 $ ./screeps_console/interactive.py
 ```
 
+## Interactivity
 
-## Colors
+The interactive console allows you to directly interact with your screeps
+program through the in game console. Most of the time what you put in will be
+sent directly to the screeps server to be processed. There are a few built in
+commands however.
 
-Console output can have colors, in both the website version and teh shell. To get
+* clear - resets the console display.
+* exit - exits the shell.
+* list - lists these and other built in commands and aliases.
+* themes - lists available themes when called without an argument, or switches
+  themes when called with the theme name as the first argument
+
+
+## Colors and Severity
+
+Console output can have colors, in both the website version and the shell. To get
 the best of both worlds use font tags that also have a severity attribute.
 
 ```
