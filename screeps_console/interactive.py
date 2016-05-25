@@ -1,15 +1,13 @@
 #!/usr/bin/env python
 
-import colorama
+import command
 import json
 import os
-from outputparser import getSeverity
-from outputparser import clearTags
-from outputparser import getType
-from screeps import ScreepsConnection
+import outputparser
 from settings import getSettings
 import subprocess
 import sys
+from themes import themes
 import urwid
 
 
@@ -18,7 +16,6 @@ class ScreepsInteractiveConsole:
     consoleWidget = False
     listWalker = False
     userInput = False
-    apiclient = False
 
     palette = [
         ('header', 'bold, white', 'dark gray'),
@@ -28,7 +25,6 @@ class ScreepsInteractiveConsole:
         ('error', 'yellow', 'dark red'),
         ('bg', 'dark blue', 'black'),
         ('default', 'light blue', 'black'),
-
         ('severity0', 'light gray', 'black'),
         ('severity1', 'dark blue', 'black'),
         ('severity2', 'dark cyan', 'black'),
@@ -42,7 +38,9 @@ class ScreepsInteractiveConsole:
     def __init__(self):
 
         frame = self.getFrame()
-        self.loop = urwid.MainLoop(urwid.AttrMap(frame, 'bg'), unhandled_input=self.catch_user_input, palette=self.palette)
+        comp = self.getCommandProcessor()
+        self.loop = urwid.MainLoop(urwid.AttrMap(frame, 'bg'), unhandled_input=comp.onInput, palette=themes['dark'])
+        comp.setDisplayWidgets(self.loop, frame, self.getConsole(), self.getConsoleListWalker(), self.getEdit())
         console_monitor = ScreepsConsoleMonitor(self.consoleWidget, self.listWalker, self.loop)
         self.loop.run()
 
@@ -68,48 +66,19 @@ class ScreepsInteractiveConsole:
 
     def getConsole(self):
         if not self.consoleWidget:
-            welcome = self.getWelcomeMessage()
             self.consoleWidget = urwid.ListBox(self.getConsoleListWalker())
         return self.consoleWidget
 
     def getConsoleListWalker(self):
         if not self.listWalker:
-            self.listWalker = urwid.SimpleFocusListWalker([self.getWelcomeMessage()])
+            self.listWalker = urwid.SimpleListWalker([self.getWelcomeMessage()])
         return self.listWalker
 
-
-    def catch_user_input(self, key):
-
-        if key == 'enter':
-            userInput = self.getEdit()
-            user_text = userInput.get_edit_text()
-            userInput.set_edit_text('')
-
-            walker = self.getConsoleListWalker()
-            walker.append(urwid.Text(('logged_input', '> ' + user_text)))
-
-            if len(walker) > 0:
-                self.getConsole().set_focus(len(walker)-1)
-
-            if user_text == 'exit':
-                raise urwid.ExitMainLoop()
-
-            if len(user_text) > 0:
-                apiclient = self.getApiClient()
-                result = apiclient.console(user_text)
-
-        return
+    def getCommandProcessor(self):
+        return command.Processor()
 
     def getWelcomeMessage(self):
         return urwid.Text(('default', 'Welcome to the Screeps Interactive Console'))
-
-
-    def getApiClient(self):
-        if not self.apiclient:
-            settings = getSettings()
-            self.apiclient = ScreepsConnection(u=settings['screeps_username'],p=settings['screeps_password'],ptr=settings['screeps_ptr'])
-        return self.apiclient
-
 
 
 class ScreepsConsoleMonitor:
@@ -135,11 +104,16 @@ class ScreepsConsoleMonitor:
         return self.proc
 
     def onUpdate(self, data):
+
+        # If we lose the connection to the remote system close the console.
+        if data.startswith('### closed ###'):
+            raise urwid.ExitMainLoop()
+
         data_lines = data.rstrip().split('\n')
         for line_json in data_lines:
             try:
                 line = json.loads(line_json.strip())
-                log_type = getType(line)
+                log_type = outputparser.getType(line)
 
                 if log_type == 'result':
                     formatting = 'logged_response'
@@ -148,14 +122,14 @@ class ScreepsConsoleMonitor:
                 elif log_type == 'error':
                     formatting = 'error'
                 else:
-                    severity = getSeverity(line)
+                    severity = outputparser.getSeverity(line)
                     if not severity or severity > 5 or severity < 0:
                         formatting = 'highlight'
                     else:
                         formatting = 'severity' + str(severity)
 
                 line = line.replace('&#09;', " ")
-                line = clearTags(line)
+                line = outputparser.clearTags(line)
                 self.walker.append(urwid.Text((formatting, line)))
                 if len(self.walker) > 0:
                     self.widget.set_focus(len(self.walker)-1)
