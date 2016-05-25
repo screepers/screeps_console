@@ -10,6 +10,7 @@ class Processor:
 
     apiclient = False
     aliases = {
+        'theme': 'themes',
         'time': 'Game.time',
         'help': 'list'
     }
