@@ -1,5 +1,7 @@
 import os
+import sys
 import yaml
+
 
 def getSettings():
     if not getSettings.settings:
