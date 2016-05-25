@@ -132,7 +132,7 @@ class Builtin:
 
         theme = user_command_split[1]
         if theme in themes:
-            comp.loop.screen.register_palette(themes['light'])
+            comp.loop.screen.register_palette(themes[theme])
             comp.loop.screen.clear()
 
         return
