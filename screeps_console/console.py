@@ -123,7 +123,11 @@ class ScreepsConsole(object):
                                     on_error=self.on_error,
                                     on_close=self.on_close,
                                     on_open=self.on_open)
-        ws.run_forever(ping_interval=1)
+        if 'http_proxy' in settings and settings['http_proxy'] is not None:
+            http_proxy_port = settings['http_proxy_port'] if 'http_proxy_port' in settings else 8080
+            ws.run_forever(http_proxy_host=settings['http_proxy'], http_proxy_port=http_proxy_port, ping_interval=1)
+        else:
+            ws.run_forever(ping_interval=1)
 
     def start(self):
         self.connect()

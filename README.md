@@ -25,6 +25,10 @@ The settings file is in yaml and takes various authentication tokens.
 screeps_username:
 screeps_password:
 screeps_ptr: false
+
+# Proxy configuration
+http_proxy:
+http_proxy_port:
 ```
 
 

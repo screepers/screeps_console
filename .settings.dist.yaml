@@ -1,4 +1,3 @@
-
 # Copy this to .settings.yaml and fill it out.
 
 # Screeps account info
@@ -7,3 +6,6 @@ screeps_username:
 screeps_password:
 screeps_ptr: false
 
+# Proxy configuration
+http_proxy:
+http_proxy_port:
