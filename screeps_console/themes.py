@@ -3,15 +3,15 @@
 
 themes = {
     'dark':[
-        ('bg',     'dark blue',   'black'),
-        ('header', 'bold, white', 'dark gray'),
-        ('input',  'white',       'dark blue'),
+        ('bg',     'dark blue', 'black'),
+        ('header', 'white',     'dark gray'),
+        ('input',  'white',     'dark blue'),
 
         ('logged_input',    'dark magenta',  'black'),
         ('logged_response', 'light magenta', 'black'),
 
         ('error',     'yellow',     'dark red'),
-        ('default',   'light blue', 'black'),
+        ('default',   'light gray', 'black'),
         ('severity0', 'light gray', 'black'),
         ('severity1', 'dark blue',  'black'),
         ('severity2', 'dark cyan',  'black'),
