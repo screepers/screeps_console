@@ -70,9 +70,9 @@ class ScreepsConsole(object):
             if message_count > 0:
                 # Make sure the delay doesn't cause an overlap into other ticks
                 if 'smooth_scroll' in settings and settings['smooth_scroll'] is True:
-                    message_delay = 0.3 / message_count
-                    if message_delay > 0.10:
-                        message_delay = 0.10
+                    message_delay = 0.2 / message_count
+                    if message_delay > 0.03:
+                        message_delay = 0.03
                 else:
                     message_delay = 0.00001
 
