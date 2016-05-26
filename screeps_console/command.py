@@ -131,6 +131,23 @@ class Builtin:
             comp.listwalker.append(urwid.Text(('logged_response', theme_list)))
             return
 
+        if user_command_split[1] == 'test':
+            comp.listwalker.append(urwid.Text(('logged_input', 'logged_input')))
+            comp.listwalker.append(urwid.Text(('logged_response', 'logged_response')))
+            comp.listwalker.append(urwid.Text(('error', 'error')))
+            comp.listwalker.append(urwid.Text(('default', 'default')))
+            comp.listwalker.append(urwid.Text(('severity0', 'severity0')))
+            comp.listwalker.append(urwid.Text(('severity1', 'severity1')))
+            comp.listwalker.append(urwid.Text(('severity2', 'severity2')))
+            comp.listwalker.append(urwid.Text(('severity3', 'severity3')))
+            comp.listwalker.append(urwid.Text(('severity4', 'severity4')))
+            comp.listwalker.append(urwid.Text(('severity5', 'severity5')))
+            comp.listwalker.append(urwid.Text(('highlight', 'highlight')))
+            comp.listbox.set_focus(len(comp.listwalker)-1)
+            return
+
+
+
         theme = user_command_split[1]
         if theme in themes:
             comp.loop.screen.register_palette(themes[theme])
