@@ -6,6 +6,26 @@ any html tags and adds colors.
 ![Screeps Interactive Console](docs/screenshot.png?raw=true "Screeps Interactive Console")
 
 
+## Requirements
+
+* python
+* ncurses (typically already on most \*nux systems)
+* pip
+* cygwin (if on Windows)
+
+
+## Installation
+
+1. Download this package, either from the Releases page or from a git clone.
+
+2. Install dependencies using `pip`. While not required, it's recommended that
+   you use [virtualenv](http://www.bogotobogo.com/python/python_virtualenv_virtualenvwrapper.php)
+   rather than installing your repositories globally.
+
+```
+pip install -r requirements.txt
+```
+
 ## Settings
 
 The settings file is a yaml file. Begin by copying the settings.dist file to
