@@ -19,6 +19,7 @@ class Processor:
         self.listbox = False
         self.listwalker = False
         self.edit = False
+        self.getApiClient()
 
     def setDisplayWidgets(self, loop, frame, listbox, listwalker, edit):
         self.listbox = listbox
