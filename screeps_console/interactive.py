@@ -93,6 +93,7 @@ class ScreepsConsoleMonitor:
             self.getProcess()
             lostprocess_message = 'reconnecting to server . . .'
             self.walker.append(urwid.Text(('logged_response', lostprocess_message)))
+            self.widget.set_focus(len(self.walker)-1)
             return
 
         data_lines = data.rstrip().split('\n')
