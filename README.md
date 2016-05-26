@@ -79,8 +79,14 @@ commands however.
 * clear - resets the console display.
 * exit - exits the shell.
 * list - lists these and other built in commands and aliases.
+* pause - disables autoscrolling (hit enter on an empty terminal to reenable).
 * themes - lists available themes when called without an argument, or switches
   themes when called with the theme name as the first argument
+
+## Scrolling
+
+PageUP and PageDOWN (FN+up and FN+down on Apple) can be used to scroll through
+the console buffer.
 
 
 ## Colors and Severity
