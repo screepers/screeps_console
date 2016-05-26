@@ -76,11 +76,11 @@ program through the in game console. Most of the time what you put in will be
 sent directly to the screeps server to be processed. There are a few built in
 commands however.
 
-* clear - resets the console display.
-* exit - exits the shell.
-* list - lists these and other built in commands and aliases.
-* pause - disables autoscrolling (hit enter on an empty terminal to reenable).
-* themes - lists available themes when called without an argument, or switches
+* `clear` - resets the console display.
+* `exit` - exits the shell.
+* `list` - lists these and other built in commands and aliases.
+* `pause` - disables autoscrolling (hit enter on an empty terminal to reenable).
+* `themes` - lists available themes when called without an argument, or switches
   themes when called with the theme name as the first argument
 
 ## Scrolling
