@@ -1,12 +1,12 @@
+import urwid
 
-from screeps import ScreepsConnection
+from screeps.screeps import Connection
+
 from settings import getSettings
 from themes import themes
-import urwid
 
 
 class Processor(object):
-
     apiclient = False
     aliases = {
         'theme': 'themes',
@@ -29,9 +29,9 @@ class Processor(object):
     def getApiClient(self):
         if not self.apiclient:
             settings = getSettings()
-            self.apiclient = ScreepsConnection(
-                           u=settings['screeps_username'],
-                           p=settings['screeps_password'],
+            self.apiclient = Connection(
+                           email=settings['screeps_username'],
+                           password=settings['screeps_password'],
                            ptr=settings['screeps_ptr'])
         return self.apiclient
 
@@ -83,7 +83,7 @@ class Processor(object):
             userInput.set_edit_text('')
             return
 
-        # Send command to Screeps API. Output will come from the console stream.
+        # Send command to Screeps API. Output will come from the console stream
         if len(user_text) > 0:
             self.listwalker.append(
                 urwid.Text(('logged_input', '> ' + user_text)))
@@ -122,7 +122,9 @@ class Builtin(object):
     def list(self, comp):
         command_list = ''
         aliases = list(comp.aliases)
-        builtin_list = [method for method in dir(self) if callable(getattr(self, method))]
+        builtin_list = [method
+                        for method in dir(self)
+                        if callable(getattr(self, method))]
         commands = builtin_list
 
         for alias in aliases:
@@ -157,8 +159,12 @@ class Builtin(object):
             return
 
         if user_command_split[1] == 'test':
-            comp.listwalker.append(urwid.Text(('logged_input', 'logged_input')))
-            comp.listwalker.append(urwid.Text(('logged_response', 'logged_response')))
+            comp.listwalker.append(urwid.Text((
+                                               'logged_input',
+                                               'logged_input')))
+            comp.listwalker.append(urwid.Text((
+                                               'logged_response',
+                                               'logged_response')))
             comp.listwalker.append(urwid.Text(('error', 'error')))
             comp.listwalker.append(urwid.Text(('default', 'default')))
             comp.listwalker.append(urwid.Text(('severity0', 'severity0')))
