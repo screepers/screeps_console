@@ -2,11 +2,10 @@
 from screeps import ScreepsConnection
 from settings import getSettings
 from themes import themes
-from types import FunctionType
 import urwid
 
 
-class Processor:
+class Processor(object):
 
     apiclient = False
     aliases = {
@@ -30,7 +29,10 @@ class Processor:
     def getApiClient(self):
         if not self.apiclient:
             settings = getSettings()
-            self.apiclient = ScreepsConnection(u=settings['screeps_username'],p=settings['screeps_password'],ptr=settings['screeps_ptr'])
+            self.apiclient = ScreepsConnection(
+                           u=settings['screeps_username'],
+                           p=settings['screeps_password'],
+                           ptr=settings['screeps_ptr'])
         return self.apiclient
 
     def onInput(self, key):
@@ -55,7 +57,6 @@ class Processor:
 
         return
 
-
     def onEnter(self, key):
         self.listbox.setAutoscroll(True)
         userInput = self.edit
@@ -65,32 +66,31 @@ class Processor:
         user_command_split = user_text.split(' ')
         first_command = user_command_split[0]
 
-        ## Check to see if command is actually an alias
+        # Check to see if command is actually an alias
         if first_command in self.aliases:
             first_command = self.aliases[first_command]
             user_command_split[0] = first_command
             user_text = ' '.join(user_command_split)
 
-
         # Look for built in commands before attempting API call.
         builtin = Builtin()
         if hasattr(builtin, first_command):
-            self.listwalker.append(urwid.Text(('logged_input', '> ' + user_text)))
+            self.listwalker.append(
+                urwid.Text(('logged_input', '> ' + user_text)))
             builtin_command = getattr(builtin, first_command)
             builtin_command(self)
             self.listbox.autoscroll()
             userInput.set_edit_text('')
             return
 
-
         # Send command to Screeps API. Output will come from the console stream.
         if len(user_text) > 0:
-            self.listwalker.append(urwid.Text(('logged_input', '> ' + user_text)))
+            self.listwalker.append(
+                urwid.Text(('logged_input', '> ' + user_text)))
             self.listbox.scrollBottom()
             userInput.set_edit_text('')
             apiclient = self.getApiClient()
-            result = apiclient.console(user_text)
-
+            apiclient.console(user_text)
 
     def onTab(self, key):
         pass
@@ -104,14 +104,12 @@ class Processor:
         self.listbox.scrollDown(int(info[1] / 2))
 
 
-class Builtin:
-
+class Builtin(object):
 
     def about(self, comp):
-        about = 'Screeps Interactive Console by Robert Hafner <tedivm@tedivm.com>'
+        about = 'Screeps Interactive Console by Robert Hafner <tedivm@tedivm.com>'  # noqa
         comp.listwalker.append(urwid.Text(('logged_response', about)))
         return
-
 
     def clear(self, comp):
         comp.listbox.set_focus_pending = 0
@@ -120,7 +118,6 @@ class Builtin:
 
     def exit(self, comp):
         raise urwid.ExitMainLoop()
-
 
     def list(self, comp):
         command_list = ''
@@ -141,7 +138,6 @@ class Builtin:
 
         comp.listwalker.append(urwid.Text(('logged_response', command_list)))
         return
-
 
     def pause(self, comp):
         comp.listbox.setAutoscroll(False)
@@ -175,18 +171,12 @@ class Builtin:
             comp.listbox.set_focus(len(comp.listwalker)-1)
             return
 
-
-
         theme = user_command_split[1]
         if theme in themes:
             comp.loop.screen.register_palette(themes[theme])
             comp.loop.screen.clear()
 
         return
-
-
-
-
 
     def turtle(self, comp):
         turtle = '''
