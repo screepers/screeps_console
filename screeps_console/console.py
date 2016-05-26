@@ -69,9 +69,12 @@ class ScreepsConsole(object):
 
             if message_count > 0:
                 # Make sure the delay doesn't cause an overlap into other ticks
-                message_delay = 1.0 / message_count
-                if message_delay > 0.10:
-                    message_delay = 0.10
+                if 'smooth_scroll' in settings and settings['smooth_scroll'] is True:
+                    message_delay = 0.3 / message_count
+                    if message_delay > 0.10:
+                        message_delay = 0.10
+                else:
+                    message_delay = 0.00001
 
                 for line in stream:
                     if self.format == 'color':
@@ -82,6 +85,7 @@ class ScreepsConsole(object):
                         line_parsed = tagLine(line)
 
                     print line_parsed
+                    sys.stdout.flush()
                     sleep(message_delay) # sleep for smoother scrolling
             return
         else:

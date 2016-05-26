@@ -9,3 +9,7 @@ screeps_ptr: false
 # Proxy configuration
 http_proxy:
 http_proxy_port:
+
+
+# Introduces a small delay between messages to emulate smooth scrolling.
+smooth_scroll: true
