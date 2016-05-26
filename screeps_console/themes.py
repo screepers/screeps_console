@@ -12,10 +12,10 @@ themes = {
 
         ('error',     'yellow',     'dark red'),
         ('default',   'light gray', 'black'),
-        ('severity0', 'light gray', 'black'),
-        ('severity1', 'dark blue',  'black'),
+        ('severity0', 'dark blue',  'black'),
+        ('severity1', 'dark green', 'black'),
         ('severity2', 'dark cyan',  'black'),
-        ('severity3', 'dark green', 'black'),
+        ('severity3', 'light gray', 'black'),
         ('severity4', 'light red',  'black'),
         ('severity5', 'yellow',     'dark red'),
         ('highlight', 'black',      'yellow'),
