@@ -50,7 +50,7 @@ class ScreepsInteractiveConsole:
 
     def getConsole(self):
         if not self.consoleWidget:
-            self.consoleWidget = urwid.ListBox(self.getConsoleListWalker())
+            self.consoleWidget = consoleWidget(self.getConsoleListWalker())
         return self.consoleWidget
 
     def getConsoleListWalker(self):
@@ -63,6 +63,43 @@ class ScreepsInteractiveConsole:
 
     def getWelcomeMessage(self):
         return urwid.Text(('default', 'Welcome to the Screeps Interactive Console'))
+
+
+class consoleWidget(urwid.ListBox):
+
+    _autoscroll = True
+
+
+    def setAutoscroll(self, option):
+        self._autoscroll = option
+
+
+    def autoscroll(self):
+        if(self._autoscroll):
+            self.scrollBottom()
+
+    def scrollBottom(self):
+        self._autoscroll = True
+        if len(self.body) > 0:
+            self.set_focus(len(self.body)-1)
+
+    def scrollUp(self, quantity):
+        self.setAutoscroll(False)
+        new_pos = self.focus_position - quantity
+        if new_pos < 0:
+            new_pos = 0
+        self.set_focus(new_pos)
+
+
+    def scrollDown(self, quantity):
+        self.setAutoscroll(False)
+        max_pos = len(self.body)-1
+        new_pos = self.focus_position + quantity
+        if new_pos > max_pos:
+            self.setAutoscroll(True)
+            new_pos = max_pos
+        self.set_focus(new_pos)
+
 
 
 
@@ -122,8 +159,7 @@ class ScreepsConsoleMonitor:
                 line = line.replace('&#09;', " ")
                 line = outputparser.clearTags(line)
                 self.walker.append(urwid.Text((formatting, line)))
-                if len(self.walker) > 0:
-                    self.widget.set_focus(len(self.walker)-1)
+                self.widget.autoscroll()
             except:
                 ''
 

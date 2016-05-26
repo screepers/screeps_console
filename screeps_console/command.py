@@ -35,17 +35,30 @@ class Processor:
     def onInput(self, key):
         if not self.listbox:
             return
+
         if key == 'enter':
             self.onEnter(key)
             return
+
+        if key == 'tab':
+            self.onTab(key)
+            return
+
+        if key == 'page up':
+            self.onPageUp(key)
+            return
+
+        if key == 'page down':
+            self.onPageDown(key)
+            return
+
         return
 
 
     def onEnter(self, key):
-
+        self.listbox.setAutoscroll(True)
         userInput = self.edit
         user_text = userInput.get_edit_text()
-
 
         # Check for builtin commands before passing to the screeps api.
         user_command_split = user_text.split(' ')
@@ -64,8 +77,7 @@ class Processor:
             self.listwalker.append(urwid.Text(('logged_input', '> ' + user_text)))
             builtin_command = getattr(builtin, first_command)
             builtin_command(self)
-            if len(self.listwalker) > 0:
-                self.listbox.set_focus(len(self.listwalker)-1)
+            self.listbox.autoscroll()
             userInput.set_edit_text('')
             return
 
@@ -73,9 +85,22 @@ class Processor:
         # Send command to Screeps API. Output will come from the console stream.
         if len(user_text) > 0:
             self.listwalker.append(urwid.Text(('logged_input', '> ' + user_text)))
+            self.listbox.scrollBottom()
             userInput.set_edit_text('')
             apiclient = self.getApiClient()
             result = apiclient.console(user_text)
+
+
+    def onTab(self, key):
+        pass
+
+    def onPageUp(self, key):
+        info = self.loop.screen.get_cols_rows()
+        self.listbox.scrollUp(int(info[1] / 2))
+
+    def onPageDown(self, key):
+        info = self.loop.screen.get_cols_rows()
+        self.listbox.scrollDown(int(info[1] / 2))
 
 
 class Builtin:
@@ -116,6 +141,9 @@ class Builtin:
         comp.listwalker.append(urwid.Text(('logged_response', command_list)))
         return
 
+
+    def pause(self, comp):
+        comp.listbox.setAutoscroll(False)
 
     def themes(self, comp):
         userInput = comp.edit
