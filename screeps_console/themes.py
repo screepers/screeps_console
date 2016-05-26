@@ -1,6 +1,13 @@
 
 
 
+
+
+# (StyleLabel, Background16, Foreground16, monochrome, Background256, Foreground256)
+# Monochrome can be used to define styles (bold, underline, standout) only.
+# 256 color is optional.
+# http://urwid.org/manual/displayattributes.html
+
 themes = {
     'dark':[
         ('bg',     'dark blue', 'black'),
