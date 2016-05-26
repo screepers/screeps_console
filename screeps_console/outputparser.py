@@ -59,9 +59,9 @@ def getSeverity(line):
             if len(groups) > 0:
                 return int(groups[0])
             else:
-                return false
+                return False
         except:
-            return false
+            return False
     else:
         return 3
 
