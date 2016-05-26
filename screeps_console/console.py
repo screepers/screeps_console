@@ -1,50 +1,26 @@
 #!/usr/bin/env python
 
-from base64 import b64decode
 import getopt
-from gzip import GzipFile
 import json
 import logging
-from outputparser import parseLine
-from outputparser import tagLine
-from screeps import ScreepsConnection
-from settings import getSettings
-from time import sleep
-import websocket
 import sys
 
+from base64 import b64decode
+from gzip import GzipFile
+from time import sleep
 
-class ScreepsConsole(object):
-
-    def __init__(self, user, password, ptr=False, logging=False):
-        self.format = 'color'
-        self.user = user
-        self.password = password
-        self.ptr = ptr
-        self.logging = False
-
-    def on_message(self, ws, message):
-        print message
-
-    def on_error(self, ws, error):
-        print error
-
-    def on_close(self, ws):
-        print "### closed ###"
-
-    def on_open(self, ws):
-        screepsConnection = ScreepsConnection(u=self.user,p=self.password,ptr=self.ptr)
-        me = screepsConnection.me()
-        self.user_id = me['_id']
-        ws.send('auth ' + screepsConnection.token)
+from _io import StringIO
+from outputparser import parseLine
+from outputparser import tagLine
+from screeps.screeps import Connection
+from settings import getSettings
 
 
-    def on_message(self, ws, message):
+class Output(object):
+    def __init__(self, output_format):
+        self.output_format = output_format
 
-        if (message.startswith('auth ok')):
-            ws.send('subscribe user:' + self.user_id + '/console')
-            return
-
+    def on_message(self, message):
         if (message.startswith('time')):
             return
 
@@ -61,15 +37,15 @@ class ScreepsConsole(object):
 
             if 'results' in data[1]['messages']:
                 results = data[1]['messages']['results']
-                results = map(lambda x:'<type="result">'+x+'</type>',results)
+                results = map(lambda x: '<type="result">' + x + '</type>',
+                              results)
                 stream = stream + results
-
 
             message_count = len(stream)
 
             if message_count > 0:
                 # Make sure the delay doesn't cause an overlap into other ticks
-                if 'smooth_scroll' in settings and settings['smooth_scroll'] is True:
+                if settings.get('smooth_scroll', False):
                     message_delay = 0.2 / message_count
                     if message_delay > 0.07:
                         message_delay = 0.07
@@ -77,76 +53,52 @@ class ScreepsConsole(object):
                     message_delay = 0.00001
 
                 for line in stream:
-                    if self.format == 'color':
+                    if self.output_format == 'color':
                         line_parsed = parseLine(line)
-                    elif self.format == 'json':
+                    elif self.output_format == 'json':
                         line_parsed = json.dumps(line)
                     else:
                         line_parsed = tagLine(line)
 
-                    print line_parsed
+                    print(line_parsed)
                     sys.stdout.flush()
-                    sleep(message_delay) # sleep for smoother scrolling
+                    sleep(message_delay)  # sleep for smoother scrolling
             return
         else:
             if 'error' in data[1]:
-                #line = '<'+data[1]['error']
-                line = "<severity=\"5\" type=\"error\">" + data[1]['error'] + "</font>"
-                if self.format == 'color':
+                # line = '<'+data[1]['error']
+                line = "<severity=\"5\" type=\"error\">" + data[1]['error'] + "</font>"  # noqa
+                if self.output_format == 'color':
                     line_parsed = parseLine(line)
-                elif self.format == 'json':
+                elif self.output_format == 'json':
                     line_parsed = json.dumps(line)
                 else:
                     line_parsed = tagLine(line)
 
-                print line_parsed
+                print(line_parsed)
                 return
             else:
-                print 'undiscovered protocol feature'
-                print json.dumps(message)
+                print('undiscovered protocol feature')
+                print(json.dumps(message))
 
         print('on_message', message)
 
 
-    def connect(self):
-
-        if self.logging:
-            logging.getLogger('websocket').addHandler(logging.StreamHandler())
-            websocket.enableTrace(True)
-        else:
-            logging.getLogger('websocket').addHandler(logging.NullHandler())
-            websocket.enableTrace(False)
-
-        if not self.ptr:
-            url = 'wss://screeps.com/socket/websocket'
-        else:
-            url = 'wss://screeps.com/ptr/socket/websocket'
-
-        ws = websocket.WebSocketApp(url=url,
-                                    on_message=self.on_message,
-                                    on_error=self.on_error,
-                                    on_close=self.on_close,
-                                    on_open=self.on_open)
-        if 'http_proxy' in settings and settings['http_proxy'] is not None:
-            http_proxy_port = settings['http_proxy_port'] if 'http_proxy_port' in settings else 8080
-            ws.run_forever(http_proxy_host=settings['http_proxy'], http_proxy_port=http_proxy_port, ping_interval=1)
-        else:
-            ws.run_forever(ping_interval=1)
-
-    def start(self):
-        self.connect()
-
-
 if __name__ == "__main__":
-
-    opts, args = getopt.getopt(sys.argv[1:], "hi:o:",["ifile=","ofile="])
+    opts, args = getopt.getopt(sys.argv[1:], "hi:o:", ["ifile=", "ofile="])
     settings = getSettings()
-    screepsconsole = ScreepsConsole(user=settings['screeps_username'], password=settings['screeps_password'], ptr=settings['screeps_ptr'])
+    screepsconsole = Connection(
+                         email=settings['screeps_username'],
+                         password=settings['screeps_password'],
+                         ptr=settings['screeps_ptr'])
+    logging.getLogger('websocket').addHandler(logging.StreamHandler())
 
+    output_format = 'log'
     if len(sys.argv) > 1:
         if sys.argv[1] == 'interactive':
-            screepsconsole.format = 'tag'
+            output_format = 'tag'
         if sys.argv[1] == 'json':
-            screepsconsole.format = 'json'
+            output_format = 'json'
 
-    screepsconsole.start()
+    output = Output(output_format)
+    screepsconsole.startWebSocket(output.on_message)
