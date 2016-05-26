@@ -9,7 +9,7 @@ any html tags and adds colors.
 ## Requirements
 
 * python
-* ncurses (typically already on most \*nux systems)
+* ncurses (typically already on most \*nix systems)
 * pip
 * cygwin (if on Windows)
 
