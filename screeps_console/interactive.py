@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
+import atexit
 import command
 import json
 import os
 import outputparser
 from settings import getSettings
+import signal
 import subprocess
 import sys
 from themes import themes
@@ -63,6 +65,7 @@ class ScreepsInteractiveConsole:
         return urwid.Text(('default', 'Welcome to the Screeps Interactive Console'))
 
 
+
 class ScreepsConsoleMonitor:
 
     proc = False
@@ -72,6 +75,7 @@ class ScreepsConsoleMonitor:
         self.walker = walker
         self.loop = loop
         self.getProcess()
+        atexit.register(self.__del__)
 
     def getProcess(self):
         if self.proc:
@@ -81,6 +85,7 @@ class ScreepsConsoleMonitor:
         self.proc = subprocess.Popen(
             [console_path + ' json'],
             stdout=write_fd,
+            preexec_fn=os.setsid,
             close_fds=True,
             shell=True)
         return self.proc
@@ -111,9 +116,8 @@ class ScreepsConsoleMonitor:
                 else:
                     severity = outputparser.getSeverity(line)
                     if not severity or severity > 5 or severity < 0:
-                        formatting = 'highlight'
-                    else:
-                        formatting = 'severity' + str(severity)
+                        severity = 2
+                    formatting = 'severity' + str(severity)
 
                 line = line.replace('&#09;', " ")
                 line = outputparser.clearTags(line)
@@ -124,7 +128,8 @@ class ScreepsConsoleMonitor:
                 ''
 
     def __del__(self):
-        self.proc.kill()
+        if self.proc:
+            os.killpg(os.getpgid(self.proc.pid), signal.SIGTERM)
 
 
 if __name__ == "__main__":
