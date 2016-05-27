@@ -115,6 +115,21 @@ class consoleEdit(urwid.Edit):
             edit_text = self.get_edit_text()
             self.bufferInput(edit_text)
             self.inputOffset = 0
+            return super(consoleEdit, self).keypress(size, key)
+
+        if key == 'ctrl a':
+            self.edit_pos = 0
+            return
+
+        if key == 'ctrl e':
+            edit_text = self.get_edit_text()
+            self.edit_pos = len(edit_text)
+            return
+
+        if key == 'ctrl u':
+            self.set_edit_text('')
+            self.edit_pos = 0
+            return
 
         if key == 'up':
             bufferLength = len(self.inputBuffer)
@@ -126,6 +141,7 @@ class consoleEdit(urwid.Edit):
                 index = self.inputOffset-1
                 new_text = self.inputBuffer[index]
                 self.set_edit_text(new_text)
+                self.edit_pos = len(new_text)
             return
 
         if key == 'down':
@@ -142,7 +158,7 @@ class consoleEdit(urwid.Edit):
                     new_text = self.inputBuffer[index]
 
                 self.set_edit_text(new_text)
-
+                self.edit_pos = len(new_text)
             return
 
 
