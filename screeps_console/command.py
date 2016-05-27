@@ -97,11 +97,11 @@ class Processor(object):
 
     def onPageUp(self, key):
         info = self.loop.screen.get_cols_rows()
-        self.listbox.scrollUp(int(info[1] / 2))
+        self.listbox.scrollUp(int(info[1] / 3))
 
     def onPageDown(self, key):
         info = self.loop.screen.get_cols_rows()
-        self.listbox.scrollDown(int(info[1] / 2))
+        self.listbox.scrollDown(int(info[1] / 3))
 
 
 class Builtin(object):
