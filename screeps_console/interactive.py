@@ -45,7 +45,7 @@ class ScreepsInteractiveConsole:
 
     def getEdit(self):
         if not self.userInput:
-            self.userInput = urwid.Edit("> ")
+            self.userInput = consoleEdit("> ")
         return self.userInput
 
     def getConsole(self):
@@ -101,6 +101,52 @@ class consoleWidget(urwid.ListBox):
         self.set_focus(new_pos)
 
 
+class consoleEdit(urwid.Edit):
+
+    inputBuffer = []
+    inputOffset = 0
+
+    def bufferInput(self, text):
+        self.inputBuffer.insert(0, text)
+
+    def keypress(self, size, key):
+
+        if key == 'enter':
+            edit_text = self.get_edit_text()
+            self.bufferInput(edit_text)
+            self.inputOffset = 0
+
+        if key == 'up':
+            bufferLength = len(self.inputBuffer)
+            if bufferLength > 0:
+                self.inputOffset += 1
+                if self.inputOffset > bufferLength:
+                    self.inputOffset = bufferLength
+
+                index = self.inputOffset-1
+                new_text = self.inputBuffer[index]
+                self.set_edit_text(new_text)
+            return
+
+        if key == 'down':
+            bufferLength = len(self.inputBuffer)
+            if bufferLength > 0:
+                self.inputOffset -= 1
+                if self.inputOffset < 0:
+                    self.inputOffset = 0
+
+                if self.inputOffset == 0:
+                    new_text = ''
+                else:
+                    index = self.inputOffset-1
+                    new_text = self.inputBuffer[index]
+
+                self.set_edit_text(new_text)
+
+            return
+
+
+        return super(consoleEdit, self).keypress(size, key)
 
 
 class ScreepsConsoleMonitor:
