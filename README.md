@@ -26,6 +26,7 @@ any html tags and adds colors.
 pip install -r requirements.txt
 ```
 
+
 ## Settings
 
 The settings file is a yaml file. Begin by copying the settings.dist file to
@@ -61,13 +62,13 @@ To stream the console output directly to your terminal's stdout run the
 $ ./screeps_console/console.py
 ```
 
-
 This project also offers an interactive shell that can be used for both reading
 console output and sending console commands to the server.
 
 ```bash
 $ ./screeps_console/interactive.py
 ```
+
 
 ## Interactivity
 
@@ -83,10 +84,12 @@ commands however.
 * `themes` - lists available themes when called without an argument, or switches
   themes when called with the theme name as the first argument
 
+
 ## Scrolling
 
-PageUP and PageDOWN (FN+up and FN+down on Apple) can be used to scroll through
-the console buffer.
+Scrolling can be done one line at a time using `alt up` and `alt down`. Using
+`PageUp` and `PageDown` (FN+up and FN+down on Apple) can be used to scroll
+through the console buffer a bit quicker.
 
 
 ## Colors and Severity
