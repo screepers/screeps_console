@@ -129,6 +129,12 @@ class Builtin(object):
         comp.listwalker.append(urwid.Text(('logged_response', about)))
         return
 
+
+    def buffer(self, comp):
+        comp.listwalker.append(urwid.Text(('logged_response', str(len(comp.listwalker)))))
+        return
+
+
     def clear(self, comp):
         comp.listbox.set_focus_pending = 0
         comp.listwalker[:] = [urwid.Text('')]

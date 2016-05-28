@@ -55,7 +55,13 @@ class ScreepsInteractiveConsole:
 
     def getConsoleListWalker(self):
         if not self.listWalker:
-            self.listWalker = urwid.SimpleListWalker([self.getWelcomeMessage()])
+            self.listWalker = consoleWalker([self.getWelcomeMessage()])
+            settings = getSettings()
+            if 'max_buffer' in settings:
+                self.listWalker.max_buffer = settings['max_buffer']
+            else:
+                self.listWalker.max_buffer = 200000
+
         return self.listWalker
 
     def getCommandProcessor(self):
@@ -99,6 +105,15 @@ class consoleWidget(urwid.ListBox):
             self.setAutoscroll(True)
             new_pos = max_pos
         self.set_focus(new_pos)
+
+
+
+class consoleWalker(urwid.SimpleListWalker):
+    def append(self, value):
+        if(len(self) >= self.max_buffer):
+            self.pop(0)
+
+        return super(consoleWalker, self).append(value)
 
 
 class consoleEdit(urwid.Edit):

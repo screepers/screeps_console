@@ -13,3 +13,6 @@ http_proxy_port:
 
 # Introduces a small delay between messages to emulate smooth scrolling.
 smooth_scroll: true
+
+# Once the output buffer reaches this length it will start removing old messages
+max_scroll: 200000
