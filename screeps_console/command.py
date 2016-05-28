@@ -55,6 +55,15 @@ class Processor(object):
             self.onPageDown(key)
             return
 
+        if key == 'meta up':
+            self.onMetaUp(key)
+            return
+
+        if key == 'meta down':
+            self.onMetaDown(key)
+            return
+
+
         return
 
     def onEnter(self, key):
@@ -102,6 +111,13 @@ class Processor(object):
     def onPageDown(self, key):
         info = self.loop.screen.get_cols_rows()
         self.listbox.scrollDown(int(info[1] / 3))
+
+    def onMetaUp(self, key):
+        self.listbox.scrollUp(1)
+
+    def onMetaDown(self, key):
+        self.listbox.scrollDown(1)
+
 
 
 class Builtin(object):
