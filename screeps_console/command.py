@@ -125,6 +125,8 @@ class Builtin(object):
     def about(self, comp):
         about = 'Screeps Interactive Console by Robert Hafner <tedivm@tedivm.com>'  # noqa
         comp.listwalker.append(urwid.Text(('logged_response', about)))
+        about = 'https://github.com/screepers/screeps_console'
+        comp.listwalker.append(urwid.Text(('logged_response', about)))
         return
 
     def clear(self, comp):
@@ -149,7 +151,7 @@ class Builtin(object):
         commands.sort()
         commands.reverse()
         for builtin_command in commands:
-            if builtin_command != 'turtle':
+            if builtin_command != 'turtle' and not builtin_command.startswith('__'):
                 command_list = builtin_command + '  ' + command_list
 
         comp.listwalker.append(urwid.Text(('logged_response', command_list)))
