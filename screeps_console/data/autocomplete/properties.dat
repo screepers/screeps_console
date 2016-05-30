@@ -41,3 +41,270 @@ say(
 suicide(
 transfer(
 upgradeController(
+
+
+
+# Flag
+
+color
+memory
+name
+secondaryColor
+remove(
+setColor(
+setPosition(
+
+
+# Market
+
+incomingTransactions
+outgoingTransactions
+myOrders
+orders
+cancelOrder(
+createBuyOrder(
+createSellOrder(
+deal(
+
+
+# Mineral
+
+mineralAmount
+mineralType
+id
+ticksToRegeneration
+
+
+# Owned Structure
+
+my
+owner
+
+
+# PathFinder Costmatrix
+
+set(
+get(
+clone()
+serialize()
+
+
+# Resource
+
+amount
+id
+resourceType
+
+
+# Room
+
+controller
+energyAvailable
+energyCapacityAvailable
+memory
+mode
+name
+storage
+terminal
+createConstructionSite(
+createFlag(
+find(
+findExitTo(
+findPath(
+getPositionAt(
+lookAt(
+lookAtArea(
+lookForAt(
+lookForAtArea(
+
+
+# RoomObject
+
+pos
+room
+
+
+# RoomPosition
+
+roomName
+x
+y
+createConstructionSite(
+createFlag(
+findClosestByPath
+findClosestByRange
+findInRange
+findPathTo
+getDirectionTo
+getRangeTo
+inRangeTo
+isEqualTo
+isNearTo
+look
+lookFor
+
+
+# Source
+
+energy
+energyCapacity
+id
+ticksToRegeneration
+
+
+# Structure
+
+hits
+hitsMax
+id
+structureType
+destroy(
+isActive(
+notifyWhenAttacked(
+
+
+# StructureContainer
+
+store
+storeCapacity
+transfer(
+
+
+# StructureController
+
+level
+progress
+progressTotal
+reservation
+ticksToDowngrade
+upgradeBlocked
+unclaim(
+
+
+# StructureExtension
+
+energy
+energyCapacity
+transferEnergy(
+
+
+# StructureExtractor
+
+
+# StructureKeeperLair
+
+ticksToSpawn
+
+
+# StructureLab
+
+cooldown
+energy
+energyCapacity
+mineralAmount
+mineralType
+mineralCapacity
+boostCreep(
+runReaction(
+transfer(
+
+
+# StructureLink
+
+cooldown
+energy
+energyCapacity
+transferEnergy(
+
+
+# StructureNuker
+
+energy
+energyCapacity
+ghodium
+ghodiumCapacity
+cooldown
+launchNuke(
+
+
+# StructureObserver
+
+observeRoom(
+
+
+# StructurePowerBank
+
+power
+ticksToDecay
+
+
+# StructurePowerSpawn
+
+energy
+energyCapacity
+power
+powerCapacity
+
+createPowerCreep(
+processPower(
+transferEnergy(
+
+
+# StructurePortal
+
+destination
+ticksToDecay
+
+
+# StructureRampart
+
+ticksToDecay
+
+
+# StructureRoad
+
+ticksToDecay
+
+
+# StructureSpawn
+
+energy
+energyCapacity
+memory
+name
+spawning
+canCreateCreep(
+createCreep(
+recycleCreep(
+renewCreep(
+transferEnergy(
+
+
+# StructureStorage
+
+store
+storeCapacity
+transfer(
+
+
+# StructureTerminal
+store
+storeCapacity
+send(
+transfer(
+
+
+# StructureTower
+
+energy
+energyCapacity
+attack(
+heal(
+repair(
+transferEnergy(
+
+
+# StructureWall
+
+ticksToLive
+
