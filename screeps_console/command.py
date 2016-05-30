@@ -1,12 +1,15 @@
 
+from autocomplete import Autocomplete
+import calendar
 from screeps import ScreepsConnection
 from settings import getSettings
 from themes import themes
+import time
 import urwid
 
 
 class Processor(object):
-
+    lastkey = False
     apiclient = False
     aliases = {
         'theme': 'themes',
@@ -15,10 +18,12 @@ class Processor(object):
     }
 
     def __init__(self):
+        self.lastkeytime = 0
         self.listbox = False
         self.listwalker = False
         self.edit = False
         self.getApiClient()
+        self.autocomplete = Autocomplete(self)
 
     def setDisplayWidgets(self, loop, frame, listbox, listwalker, edit):
         self.listbox = listbox
@@ -36,6 +41,16 @@ class Processor(object):
         return self.apiclient
 
     def onInput(self, key):
+
+        lastkeytime = self.lastkeytime
+        self.lastkeytime = calendar.timegm(time.gmtime())
+
+        if self.lastkeytime - lastkeytime > 3:
+            self.lastkey = False
+
+        lastkey = self.lastkey
+        self.lastkey = key
+
         if not self.listbox:
             return
 
@@ -43,7 +58,7 @@ class Processor(object):
             self.onEnter(key)
             return
 
-        if key == 'tab':
+        if key == 'tab' and lastkey == 'tab':
             self.onTab(key)
             return
 
@@ -102,6 +117,7 @@ class Processor(object):
             apiclient.console(user_text)
 
     def onTab(self, key):
+        self.autocomplete.complete()
         pass
 
     def onPageUp(self, key):
