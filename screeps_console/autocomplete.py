@@ -9,26 +9,35 @@ class Autocomplete(object):
 
     def __init__(self, comp):
         self.comp = comp
-        self.wordlist = self.loadList('basic')
+
+        basic = self.loadList('basic')
+        constants = self.loadList('constants')
+        combined = basic + constants
+        self.lists['combined'] = self.sortList(combined)
         return
+
 
     def loadList(self, listname):
 
         if not listname in self.lists:
             autocomplete = pkg_resources.resource_string(__name__, 'data/autocomplete/' + listname + '.dat')
             autocomplete_list = autocomplete.splitlines()
-            autocomplete_list_filtered = [x for x in autocomplete_list if not x.startswith('#') and x != '']
-            autocomplete_list_unique = {}.fromkeys(autocomplete_list_filtered).keys()
-            autocomplete_list_unique.sort()
+            autocomplete_list_unique = self.sortList(autocomplete_list)
             self.lists[listname] = autocomplete_list_unique
-
         return self.lists[listname]
+
+
+    def sortList(self, list):
+        autocomplete_list_filtered = [x for x in list if not x.startswith('#') and x != '']
+        autocomplete_list_unique = {}.fromkeys(autocomplete_list_filtered).keys()
+        autocomplete_list_unique.sort()
+        return autocomplete_list_unique
 
 
     def complete(self):
         prefix = ''
         user_text = self.comp.edit.get_edit_text()
-        results = self.getMatchingString(self.loadList('basic'), user_text)
+        results = self.getMatchingString(self.loadList('combined'), user_text)
         number_results = len(results)
 
         # Check for a '.' to see if we're looking at a property
