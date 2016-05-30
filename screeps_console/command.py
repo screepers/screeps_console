@@ -45,7 +45,7 @@ class Processor(object):
         lastkeytime = self.lastkeytime
         self.lastkeytime = calendar.timegm(time.gmtime())
 
-        if self.lastkeytime - lastkeytime > 3:
+        if self.lastkeytime - lastkeytime > 1:
             self.lastkey = False
 
         lastkey = self.lastkey
