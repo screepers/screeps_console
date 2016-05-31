@@ -21,15 +21,17 @@ class Processor(object):
         self.lastkeytime = 0
         self.listbox = False
         self.listwalker = False
+        self.consolemonitor = False
         self.edit = False
         self.getApiClient()
         self.autocomplete = Autocomplete(self)
 
-    def setDisplayWidgets(self, loop, frame, listbox, listwalker, edit):
-        self.listbox = listbox
+    def setDisplayWidgets(self, loop, frame, listbox, listwalker, edit, consolemonitor):
+        self.listbox = listbox # console
         self.listwalker = listwalker
         self.edit = edit
         self.loop = loop
+        self.consolemonitor = consolemonitor
 
     def getApiClient(self):
         if not self.apiclient:
@@ -158,6 +160,39 @@ class Builtin(object):
 
     def exit(self, comp):
         raise urwid.ExitMainLoop()
+
+    def filter(self, comp):
+
+        user_text = comp.edit.get_edit_text()
+        user_command_split = user_text.split(' ')
+
+        if len(user_command_split) <= 1:
+            subcommand = 'list'
+        else:
+            subcommand = user_command_split[1]
+
+        if subcommand == 'list':
+            filters = comp.consolemonitor.filters[:]
+
+            if len(filters) <= 0:
+                comp.listwalker.append(urwid.Text(('logged_response', 'No filters')))
+                comp.listbox.autoscroll()
+                return
+            else:
+                for index, pattern in enumerate(filters):
+                    comp.listwalker.append(urwid.Text(('logged_response', str(index) + '. ' + pattern)))
+                    comp.listbox.autoscroll()
+                return
+
+        elif subcommand == 'add':
+            regex = user_command_split[2:]
+            comp.consolemonitor.filters.append(' '.join(regex))
+
+        elif subcommand == 'remove':
+            toRemove = user_command_split[2]
+            comp.consolemonitor.filters.pop(int(toRemove))
+            pass
+
 
     def list(self, comp):
         command_list = ''

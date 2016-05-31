@@ -92,10 +92,20 @@ Scrolling can be done one line at a time using `alt up` and `alt down`. Using
 through the console buffer a bit quicker.
 
 
+## Filters
+
+Console output can be filtered using regular expressions and the `filter`
+command. Only commands that match at least one filter will be displayed.
+
+`filter list` - this lists each current regex filter and it's index.
+`filter add` - add a regular expression to the filter list.
+`filter remove` - remove a regular expression using it's index.
+
+
 ## Colors and Severity
 
-Console output can have colors, in both the website version and the shell. To get
-the best of both worlds use font tags that also have a severity attribute.
+Console output can have colors, in both the website version and the shell. To
+get the best of both worlds use font tags that also have a severity attribute.
 
 ```
 <font color="#999999" severity="2">Message goes here!</font>

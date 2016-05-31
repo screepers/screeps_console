@@ -3,9 +3,11 @@
 import atexit
 import command
 import json
+import logging
 import os
 from os.path import expanduser
 import outputparser
+import re
 from settings import getSettings
 import signal
 import subprocess
@@ -19,14 +21,17 @@ class ScreepsInteractiveConsole:
     consoleWidget = False
     listWalker = False
     userInput = False
+    consoleMonitor = False
 
     def __init__(self):
 
         frame = self.getFrame()
         comp = self.getCommandProcessor()
         self.loop = urwid.MainLoop(urwid.AttrMap(frame, 'bg'), unhandled_input=comp.onInput, palette=themes['dark'])
-        comp.setDisplayWidgets(self.loop, frame, self.getConsole(), self.getConsoleListWalker(), self.getEdit())
-        console_monitor = ScreepsConsoleMonitor(self.consoleWidget, self.listWalker, self.loop)
+        self.consoleMonitor = ScreepsConsoleMonitor(self.consoleWidget, self.listWalker, self.loop)
+
+        comp.setDisplayWidgets(self.loop, frame, self.getConsole(), self.getConsoleListWalker(), self.getEdit(), self.consoleMonitor)
+
         self.loop.run()
 
 
@@ -214,6 +219,7 @@ class consoleEdit(urwid.Edit):
 class ScreepsConsoleMonitor:
 
     proc = False
+    filters = []
 
     def __init__(self, widget, walker, loop):
         self.widget = widget
@@ -249,6 +255,10 @@ class ScreepsConsoleMonitor:
         data_lines = data.rstrip().split('\n')
         for line_json in data_lines:
             try:
+
+                if len(line_json) <= 0:
+                    continue
+
                 line = json.loads(line_json.strip())
                 log_type = outputparser.getType(line)
 
@@ -266,10 +276,29 @@ class ScreepsConsoleMonitor:
 
                 line = line.replace('&#09;', " ")
                 line = outputparser.clearTags(line)
+
+                if log_type == 'log' and len(self.filters) > 0:
+                    has_match = False
+
+                    for pattern in self.filters:
+                        try:
+                            match = re.search(pattern, line)
+                        except:
+                            e = sys.exc_info()[0]
+                            logging.exception('dammit')
+
+                        if match is not None:
+                            has_match = True
+                            break
+
+                    if not has_match:
+                        continue
+
                 self.walker.append(urwid.Text((formatting, line)))
                 self.widget.autoscroll()
+
             except:
-                ''
+                logging.exception('error processing data')
 
     def __del__(self):
         if self.proc:
