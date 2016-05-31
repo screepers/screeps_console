@@ -148,16 +148,19 @@ class Builtin(object):
         comp.listwalker.append(urwid.Text(('logged_response', about)))
         return
 
-
     def buffer(self, comp):
         comp.listwalker.append(urwid.Text(('logged_response', str(len(comp.listwalker)))))
         return
-
 
     def clear(self, comp):
         comp.listbox.set_focus_pending = 0
         comp.listwalker[:] = [urwid.Text('')]
         return
+
+    def disconnect(self, comp):
+        comp.consolemonitor.disconnect()
+        comp.listwalker.append(urwid.Text(('logged_response', 'disconnecting')))
+        comp.listbox.autoscroll()
 
     def exit(self, comp):
         raise urwid.ExitMainLoop()
@@ -202,8 +205,6 @@ class Builtin(object):
             toRemove = user_command_split[2]
             comp.consolemonitor.filters.pop(int(toRemove))
 
-
-
     def list(self, comp):
         command_list = ''
         aliases = list(comp.aliases)
@@ -226,6 +227,11 @@ class Builtin(object):
 
     def pause(self, comp):
         comp.listbox.setAutoscroll(False)
+
+    def reconnect(self, comp):
+        comp.consolemonitor.reconnect()
+        comp.listwalker.append(urwid.Text(('logged_response', 'reconnecting')))
+        comp.listbox.autoscroll()
 
     def themes(self, comp):
         userInput = comp.edit

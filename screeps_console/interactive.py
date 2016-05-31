@@ -243,6 +243,19 @@ class ScreepsConsoleMonitor:
             shell=True)
         return self.proc
 
+
+    def reconnect(self):
+        self.disconnect()
+        self.getProcess()
+
+    def disconnect(self):
+        if self.proc:
+            try:
+                os.killpg(os.getpgid(self.proc.pid), signal.SIGTERM)
+            except:
+                pass
+            self.proc = False    
+
     def onUpdate(self, data):
 
         # If we lose the connection to the remote system close the console.
