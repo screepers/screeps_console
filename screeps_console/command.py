@@ -189,17 +189,19 @@ class Builtin(object):
             regex = user_command_split[2:]
             comp.consolemonitor.filters.append(' '.join(regex))
 
+        elif subcommand == 'clear':
+            comp.consolemonitor.filters = []
+
         elif subcommand == 'contains':
             remaining_commands = user_command_split[2:]
             matchstring = ' '.join(remaining_commands)
             matchstring_escaped = '.*' + re.escape(matchstring) + '.*'
             comp.consolemonitor.filters.append(matchstring_escaped)
 
-
         elif subcommand == 'remove':
             toRemove = user_command_split[2]
             comp.consolemonitor.filters.pop(int(toRemove))
-            pass
+
 
 
     def list(self, comp):
