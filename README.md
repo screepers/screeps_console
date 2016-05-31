@@ -30,10 +30,11 @@ pip install -r requirements.txt
 ## Settings
 
 The settings file is a yaml file. Begin by copying the settings.dist file to
-.settings.yaml in the directory you will be calling `notify.py` from.
+.settings.yaml in the directory you will be calling the shell from, or you can
+store the file in your home directory.
 
 ```
-cp .settings.dist.yaml .settings.yaml
+cp .settings.dist.yaml ~/.screeps_settings.yaml
 ```
 
 The settings file is in yaml and takes various authentication tokens.
