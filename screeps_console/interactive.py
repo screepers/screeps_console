@@ -137,6 +137,8 @@ class consoleEdit(urwid.Edit):
         return super(consoleEdit, self).__init__(caption, edit_text, multiline, align, wrap, allow_tab, edit_pos, layout, mask)
 
     def bufferInput(self, text):
+        if len(text) < 1:
+            return
         path = expanduser('~') + '/.screeps_history'
         history_file = open(path, 'a')
         history_file.write(text + "\n")
