@@ -81,8 +81,9 @@ commands however.
 * `exit` - exits the shell.
 * `list` - lists these and other built in commands and aliases.
 * `pause` - disables autoscrolling (hit enter on an empty terminal to reenable).
-* `themes` - lists available themes when called without an argument, or switches
-  themes when called with the theme name as the first argument
+* `themes` - lists available themes when called without an argument, or switches.  
+  Otherwise switches themes when called with the theme name as the first
+  argument.
 
 
 ## Scrolling
@@ -99,6 +100,8 @@ command. Only commands that match at least one filter will be displayed.
 
 `filter list` - this lists each current regex filter and it's index.  
 `filter add` - add a regular expression to the filter list.  
+`filter contains` - add a filter that looks for log lines that contain the
+  supplied string.   
 `filter remove` - remove a regular expression using it's index.  
 
 

@@ -3,6 +3,7 @@ from autocomplete import Autocomplete
 import calendar
 from screeps import ScreepsConnection
 from settings import getSettings
+import re
 from themes import themes
 import time
 import urwid
@@ -187,6 +188,13 @@ class Builtin(object):
         elif subcommand == 'add':
             regex = user_command_split[2:]
             comp.consolemonitor.filters.append(' '.join(regex))
+
+        elif subcommand == 'contains':
+            remaining_commands = user_command_split[2:]
+            matchstring = ' '.join(remaining_commands)
+            matchstring_escaped = '.*' + re.escape(matchstring) + '.*'
+            comp.consolemonitor.filters.append(matchstring_escaped)
+
 
         elif subcommand == 'remove':
             toRemove = user_command_split[2]
