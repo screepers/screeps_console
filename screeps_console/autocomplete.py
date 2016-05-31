@@ -61,7 +61,7 @@ class Autocomplete(object):
             new_edit = prefix + bestMatch
             self.comp.edit.set_edit_text(new_edit)
             self.comp.edit.set_edit_pos(len(new_edit))
-            self.comp.listwalker.append(urwid.Text(('logged_response', ' '.join(results))))
+            self.comp.listwalker.append(urwid.Text(('logged_response', ' * '.join(results))))
             self.comp.listbox.autoscroll()
         return False
 
