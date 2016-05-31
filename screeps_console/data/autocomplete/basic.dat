@@ -3,9 +3,17 @@
 
 about
 buffer
+disconnect
 clear
 exit
+filter
+filter add
+filter list
+filter clear
+filter remove
 list
 pause
-themes
+reconnect
+themes list
+themes test
 time
