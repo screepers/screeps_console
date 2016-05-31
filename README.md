@@ -97,9 +97,9 @@ through the console buffer a bit quicker.
 Console output can be filtered using regular expressions and the `filter`
 command. Only commands that match at least one filter will be displayed.
 
-`filter list` - this lists each current regex filter and it's index.
-`filter add` - add a regular expression to the filter list.
-`filter remove` - remove a regular expression using it's index.
+`filter list` - this lists each current regex filter and it's index.  
+`filter add` - add a regular expression to the filter list.  
+`filter remove` - remove a regular expression using it's index.  
 
 
 ## Colors and Severity
