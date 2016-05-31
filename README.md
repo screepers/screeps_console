@@ -78,13 +78,18 @@ program through the in game console. Most of the time what you put in will be
 sent directly to the screeps server to be processed. There are a few built in
 commands however.
 
+* `about` - displays information about the program.
 * `clear` - resets the console display.
+* `disconnect` - disconnects the console from the Screeps server.
 * `exit` - exits the shell.
+* `filter` - applies filters to the console output.
 * `list` - lists these and other built in commands and aliases.
 * `pause` - disables autoscrolling (hit enter on an empty terminal to reenable).
+* `reconnect` - reconnects the console to the Screeps server.
 * `themes` - lists available themes when called without an argument, or switches.  
   Otherwise switches themes when called with the theme name as the first
   argument.
+* `time` - displays the time (in ticks) on the Screeps server.
 
 
 ## Scrolling
