@@ -16,3 +16,6 @@ smooth_scroll: true
 
 # Once the output buffer reaches this length it will start removing old messages
 max_scroll: 200000
+
+# Defines the maximum commands saved to the history file
+max_history: 200000

@@ -4,6 +4,7 @@ import atexit
 import command
 import json
 import os
+from os.path import expanduser
 import outputparser
 from settings import getSettings
 import signal
@@ -121,8 +122,39 @@ class consoleEdit(urwid.Edit):
     inputBuffer = []
     inputOffset = 0
 
+    def __init__(self, caption=u'', edit_text=u'', multiline=False, align='left', wrap='space', allow_tab=False, edit_pos=None, layout=None, mask=None):
+        path = expanduser('~') + '/.screeps_history'
+        with open(path, 'r') as myfile:
+            file_contents = myfile.read()
+            self.inputBuffer = file_contents.splitlines()
+            self.inputBuffer.reverse()
+
+        return super(consoleEdit, self).__init__(caption, edit_text, multiline, align, wrap, allow_tab, edit_pos, layout, mask)
+
     def bufferInput(self, text):
+        path = expanduser('~') + '/.screeps_history'
+        history_file = open(path, 'a')
+        history_file.write(text + "\n")
         self.inputBuffer.insert(0, text)
+        self.manageBufferHistory()
+
+    def manageBufferHistory(self):
+        path = expanduser('~') + '/.screeps_history'
+        with open(path, 'r') as myfile:
+            file_contents = myfile.read()
+            file_contents_line = file_contents.splitlines()
+            num_lines = len(file_contents_line)
+            settings = getSettings()
+            if 'max_history' in settings:
+                max_scroll = settings['max_history']
+            else:
+                max_scroll = 200000
+
+            if num_lines > max_scroll:
+                truncate = num_lines - max_scroll
+                list_copy = file_contents_line[:]
+                list_copy = [s + "\n" for s in list_copy]
+                open(path, 'w').writelines(list_copy[truncate+1:])
 
     def keypress(self, size, key):
 
@@ -175,7 +207,6 @@ class consoleEdit(urwid.Edit):
                 self.set_edit_text(new_text)
                 self.edit_pos = len(new_text)
             return
-
 
         return super(consoleEdit, self).keypress(size, key)
 
