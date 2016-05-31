@@ -98,12 +98,12 @@ through the console buffer a bit quicker.
 Console output can be filtered using regular expressions and the `filter`
 command. Only commands that match at least one filter will be displayed.
 
-`filter list` - this lists each current regex filter and it's index.  
-`filter add` - add a regular expression to the filter list.  
+`filter list` - this lists each current regex filter and its index.  
+`filter add REGEX` - add a regular expression to the filter list.  
 `filter clear` - remove all filters.
-`filter contains` - add a filter that looks for log lines that contain the
+`filter contains STRING` - add a filter that looks for log lines that contain the
   supplied string.   
-`filter remove` - remove a regular expression using it's index.  
+`filter remove INDEX` - remove a regular expression using it's index.  
 
 
 ## Colors and Severity
