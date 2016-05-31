@@ -304,7 +304,10 @@ class ScreepsConsoleMonitor:
 
     def __del__(self):
         if self.proc:
-            os.killpg(os.getpgid(self.proc.pid), signal.SIGTERM)
+            try:
+                os.killpg(os.getpgid(self.proc.pid), signal.SIGTERM)
+            except:
+                pass
 
 
 if __name__ == "__main__":
