@@ -129,10 +129,11 @@ class consoleEdit(urwid.Edit):
 
     def __init__(self, caption=u'', edit_text=u'', multiline=False, align='left', wrap='space', allow_tab=False, edit_pos=None, layout=None, mask=None):
         path = expanduser('~') + '/.screeps_history'
-        with open(path, 'r') as myfile:
-            file_contents = myfile.read()
-            self.inputBuffer = file_contents.splitlines()
-            self.inputBuffer.reverse()
+        if os.path.isfile(path):
+            with open(path, 'r') as myfile:
+                file_contents = myfile.read()
+                self.inputBuffer = file_contents.splitlines()
+                self.inputBuffer.reverse()
 
         return super(consoleEdit, self).__init__(caption, edit_text, multiline, align, wrap, allow_tab, edit_pos, layout, mask)
 
@@ -254,7 +255,7 @@ class ScreepsConsoleMonitor:
                 os.killpg(os.getpgid(self.proc.pid), signal.SIGTERM)
             except:
                 pass
-            self.proc = False    
+            self.proc = False
 
     def onUpdate(self, data):
 
