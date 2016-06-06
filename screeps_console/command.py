@@ -1,7 +1,7 @@
 
 from autocomplete import Autocomplete
 import calendar
-from screeps import ScreepsConnection
+import screepsapi
 from settings import getSettings
 import re
 from themes import themes
@@ -37,7 +37,7 @@ class Processor(object):
     def getApiClient(self):
         if not self.apiclient:
             settings = getSettings()
-            self.apiclient = ScreepsConnection(
+            self.apiclient = screepsapi.API(
                            u=settings['screeps_username'],
                            p=settings['screeps_password'],
                            ptr=settings['screeps_ptr'])

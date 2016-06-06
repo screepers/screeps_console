@@ -3,7 +3,7 @@ nose==1.3.7
 PyYAML==3.11
 requests==2.10.0
 Requires==0.0.3
--e git+https://github.com/tedivm/python-screeps.git@c300073133dcd08d2d5f100a1a006bda60d9ce05#egg=screeps
+-e git+https://github.com/tedivm/python-screeps.git@952a5af1d6e665eb36f32700bdfdda5fe19befbd#egg=screepsapi
 six==1.10.0
 urwid==1.3.1
 websocket-client==0.37.0
