@@ -16,15 +16,15 @@ any html tags and adds colors.
 
 ## Installation
 
-1. Download this package, either from the Releases page or from a git clone.
+1. Make sure `virtualenv` is installed- `pip install virtualenv`
 
-2. Install dependencies using `pip`. While not required, it's recommended that
-   you use [virtualenv](http://www.bogotobogo.com/python/python_virtualenv_virtualenvwrapper.php)
-   rather than installing your repositories globally.
+2. Run `make`
 
-```
-pip install -r requirements.txt
-```
+3. Run `make install`
+
+4. Create settings (as per the instructions below).
+
+5. Run `screepsconsole` from inside the terminal.
 
 
 ## Settings
