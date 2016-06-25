@@ -4,8 +4,8 @@ from colorama import Fore, Back, Style
 import re
 
 colorama.init()
-SEVERITY_RE = re.compile(r'<.*severity="(\d)">')
-TYPE_RE = re.compile(r'<.*type="([a-zA-Z0-9]*)">')
+SEVERITY_RE = re.compile(r'<.*severity="(\d)".*>')
+TYPE_RE = re.compile(r'<.*type="([a-zA-Z0-9]*)".*>')
 TAG_RE = re.compile(r'<[^>]+>')
 
 def parseLine(line):
