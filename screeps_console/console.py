@@ -2,7 +2,6 @@
 
 from base64 import b64decode
 import getopt
-from gzip import GzipFile
 import json
 import logging
 from outputparser import parseLine
@@ -13,6 +12,7 @@ from time import sleep
 import websocket
 from StringIO import StringIO
 import sys
+import zlib
 
 
 class ScreepsConsole(screepsapi.Socket):
@@ -37,9 +37,12 @@ class ScreepsConsole(screepsapi.Socket):
             return
 
         if (message.startswith('gz')):
-            gzipFile = GzipFile(fileobj=StringIO(b64decode(message[3:])))
-            message = gzipFile.read()
-
+            try:
+                decoded = b64decode(message[3:])
+                message = zlib.decompress(decoded, 0)
+            except:
+                print("Unexpected error:", sys.exc_info())
+                return
 
         data = json.loads(message)
 
