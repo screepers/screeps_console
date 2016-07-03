@@ -66,6 +66,14 @@ $ ./screeps_console/console.py
 This project also offers an interactive shell that can be used for both reading
 console output and sending console commands to the server.
 
+If you've installed using the provided make file you can launch
+
+```bash
+$ screepsconsole
+```
+
+You can also call the python script directly.
+
 ```bash
 $ ./screeps_console/interactive.py
 ```
