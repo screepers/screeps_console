@@ -274,8 +274,13 @@ class ScreepsConsoleMonitor:
 
                 if len(line_json) <= 0:
                     continue
+                try:
+                    line = json.loads(line_json.strip())
+                except:
+                    print line_json
+                    logging.exception('error processing data: ' + line_json)
+                    continue
 
-                line = json.loads(line_json.strip())
                 log_type = outputparser.getType(line)
 
                 if log_type == 'result':
