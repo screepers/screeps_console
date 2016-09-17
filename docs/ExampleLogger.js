@@ -13,7 +13,7 @@ ExampleLogger.colors = {
 
 ExampleLogger.log = function (message, severity = 3) {
   if(severity > 5) {
-    seveirty = 5
+    severity = 5
   } else if (severity < 0) {
     severity = 0
   } else if (!Number.isInteger(severity)) {
