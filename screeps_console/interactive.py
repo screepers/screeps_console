@@ -298,6 +298,9 @@ class ScreepsConsoleMonitor:
                 line = line.replace('&#09;', " ")
                 line = outputparser.clearTags(line)
 
+                if line.startswith('ScreepStats: Processed'):
+                    return
+
                 if log_type == 'log' and len(self.filters) > 0:
                     has_match = False
 
