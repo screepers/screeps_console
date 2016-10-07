@@ -16,15 +16,18 @@ any html tags and adds colors.
 
 ## Installation
 
+Note: This application requires Python 2, not 3.
+
+1. Make sure you have `pip` installed. On Mac OS X do `sudo easy_install pip`
 1. Make sure `virtualenv` is installed- `pip install virtualenv`
-
+1. Clone this GitHub repo and go into the cloned directory
+1. Determine where your Python is installed with `which python` - assume it is `/path/to/python` and replace that below
+1. Set up the `virtualenv` with the command `virtualenv -p /path/to/python env`
+1. Use that new `virtualenv` with the command `source env/bin/activate`
 2. Run `make`
-
 3. Run `make install`
-
-4. Create settings (as per the instructions below).
-
-5. Run `screepsconsole` from inside the terminal.
+4. Create settings (as per the instructions below)
+5. Run `screepsconsole` from inside the terminal
 
 
 ## Settings
