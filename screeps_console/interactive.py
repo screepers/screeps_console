@@ -24,15 +24,26 @@ class ScreepsInteractiveConsole:
     consoleMonitor = False
 
     def __init__(self):
+        try:
+            frame = self.getFrame()
+            comp = self.getCommandProcessor()
+            self.loop = urwid.MainLoop(urwid.AttrMap(frame, 'bg'),
+                                        unhandled_input=comp.onInput,
+                                        palette=themes['dark'])
 
-        frame = self.getFrame()
-        comp = self.getCommandProcessor()
-        self.loop = urwid.MainLoop(urwid.AttrMap(frame, 'bg'), unhandled_input=comp.onInput, palette=themes['dark'])
-        self.consoleMonitor = ScreepsConsoleMonitor(self.consoleWidget, self.listWalker, self.loop)
+            self.consoleMonitor = ScreepsConsoleMonitor(self.consoleWidget,
+                                                        self.listWalker,
+                                                        self.loop)
 
-        comp.setDisplayWidgets(self.loop, frame, self.getConsole(), self.getConsoleListWalker(), self.getEdit(), self.consoleMonitor)
-
-        self.loop.run()
+            comp.setDisplayWidgets(self.loop,
+                                   frame,
+                                   self.getConsole(),
+                                   self.getConsoleListWalker(),
+                                   self.getEdit(),
+                                   self.consoleMonitor)
+            self.loop.run()
+        except KeyboardInterrupt:
+            exit(0)
 
 
     def getFrame(self):
