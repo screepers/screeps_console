@@ -157,6 +157,27 @@ class Builtin(object):
         comp.listwalker[:] = [urwid.Text('')]
         return
 
+    def console(self, comp):
+        helpmessage = 'Control console output. `console quiet` to suppress console output and `console reset` to turn it back on.'
+        userInput = comp.edit
+        user_text = userInput.get_edit_text()
+        user_command_split = user_text.split(' ')
+
+        if len(user_command_split) < 2:
+            comp.listwalker.append(urwid.Text(('logged_response', helpmessage)))
+            return False
+
+        command = user_command_split[1]
+
+        if command == 'quiet':
+            comp.consolemonitor.quiet = True
+            comp.listwalker.append(urwid.Text(('logged_response', 'Limiting display to user interactions only.')))
+        elif command == 'reset' or command == 'verbose':
+            comp.consolemonitor.quiet = False
+            comp.listwalker.append(urwid.Text(('logged_response', 'Displaying all console output.')))
+        else:
+            comp.listwalker.append(urwid.Text(('logged_response', helpmessage)))
+
     def disconnect(self, comp):
         comp.consolemonitor.disconnect()
         comp.listwalker.append(urwid.Text(('logged_response', 'disconnecting')))

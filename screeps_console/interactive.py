@@ -222,6 +222,7 @@ class consoleEdit(urwid.Edit):
 class ScreepsConsoleMonitor:
 
     proc = False
+    quiet = False
     filters = []
 
     def __init__(self, widget, walker, loop):
@@ -282,6 +283,9 @@ class ScreepsConsoleMonitor:
                     continue
 
                 log_type = outputparser.getType(line)
+
+                if self.quiet and log_type != 'result':
+                    return
 
                 if log_type == 'result':
                     formatting = 'logged_response'

@@ -91,13 +91,14 @@ commands however.
 
 * `about` - displays information about the program.
 * `clear` - resets the console display.
+* `console` - allows users to suppress normal console output and only sure user interactions.
 * `disconnect` - disconnects the console from the Screeps server.
 * `exit` - exits the shell.
 * `filter` - applies filters to the console output.
 * `list` - lists these and other built in commands and aliases.
 * `pause` - disables autoscrolling (hit enter on an empty terminal to reenable).
 * `reconnect` - reconnects the console to the Screeps server.
-* `themes` - lists available themes when called without an argument, or switches.  
+* `themes` - lists available themes when called without an argument, or switches.
   Otherwise switches themes when called with the theme name as the first
   argument.
 * `time` - displays the time (in ticks) on the Screeps server.
@@ -115,12 +116,12 @@ through the console buffer a bit quicker.
 Console output can be filtered using regular expressions and the `filter`
 command. Only commands that match at least one filter will be displayed.
 
-`filter list` - this lists each current regex filter and its index.  
-`filter add REGEX` - add a regular expression to the filter list.  
+`filter list` - this lists each current regex filter and its index.
+`filter add REGEX` - add a regular expression to the filter list.
 `filter clear` - remove all filters.
 `filter contains STRING` - add a filter that looks for log lines that contain the
-  supplied string.   
-`filter remove INDEX` - remove a regular expression using it's index.  
+  supplied string.
+`filter remove INDEX` - remove a regular expression using it's index.
 
 
 ## Colors and Severity
