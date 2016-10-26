@@ -226,6 +226,11 @@ class Builtin(object):
             toRemove = user_command_split[2]
             comp.consolemonitor.filters.pop(int(toRemove))
 
+    def gcl(self, comp):
+        control_points = int(comp.getApiClient().me()['gcl'])
+        gcl = str(int((control_points/1000000) ** (1/2.4))+1)
+        comp.listwalker.append(urwid.Text(('logged_response', gcl)))
+
     def list(self, comp):
         command_list = ''
         aliases = list(comp.aliases)
@@ -313,3 +318,7 @@ class Builtin(object):
 '''
         comp.listwalker.append(urwid.Text(('logged_response', turtle)))
         comp.listwalker.append(urwid.Text(('logged_response', '')))
+
+    def whoami(self, comp):
+        me = comp.getApiClient().me()['username']
+        comp.listwalker.append(urwid.Text(('logged_response', me)))
