@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
     opts, args = getopt.getopt(sys.argv[1:], "hi:o:",["ifile=","ofile="])
     settings = getSettings()
-    screepsconsole = ScreepsConsole(user=settings['screeps_username'], password=settings['screeps_password'], ptr=settings['screeps_ptr'])
+    screepsconsole = ScreepsConsole(user=settings['screeps_username'], password=settings['screeps_password'], ptr=settings['screeps_ptr'], host=settings['screeps_host'])
 
     if len(sys.argv) > 1:
         if sys.argv[1] == 'interactive':
