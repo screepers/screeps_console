@@ -6,6 +6,9 @@ screeps_username:
 screeps_password:
 screeps_ptr: false
 
+# Set a hostname to connect to a private server (e.g. localhost:21025)
+screeps_host:
+
 # Proxy configuration
 http_proxy:
 http_proxy_port:

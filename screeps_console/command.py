@@ -40,7 +40,8 @@ class Processor(object):
             self.apiclient = screepsapi.API(
                            u=settings['screeps_username'],
                            p=settings['screeps_password'],
-                           ptr=settings['screeps_ptr'])
+                           ptr=settings['screeps_ptr'],
+                           host=settings['screeps_host'])
         return self.apiclient
 
     def onInput(self, key):
