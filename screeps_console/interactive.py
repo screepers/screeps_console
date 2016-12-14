@@ -240,6 +240,7 @@ class ScreepsConsoleMonitor:
         self.widget = widget
         self.walker = walker
         self.loop = loop
+        self.buffer = ''
         self.getProcess()
         atexit.register(self.__del__)
 
@@ -279,7 +280,12 @@ class ScreepsConsoleMonitor:
             self.walker.append(urwid.Text(('logged_response', lostprocess_message)))
             self.widget.set_focus(len(self.walker)-1)
             return
-
+        if data[-1:] != '\n':
+            self.buffer += data
+            return
+        if len(self.buffer) > 0:
+            data = self.buffer + data
+            self.buffer = ''
         data_lines = data.rstrip().split('\n')
         for line_json in data_lines:
             try:
@@ -289,7 +295,7 @@ class ScreepsConsoleMonitor:
                 try:
                     line = json.loads(line_json.strip())
                 except:
-                    print line_json
+                    print line_json                   
                     logging.exception('error processing data: ' + line_json)
                     continue
 
