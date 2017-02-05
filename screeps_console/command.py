@@ -224,8 +224,14 @@ class Builtin(object):
             comp.consolemonitor.filters.append(matchstring_escaped)
 
         elif subcommand == 'remove':
-            toRemove = user_command_split[2]
-            comp.consolemonitor.filters.pop(int(toRemove))
+            if len(user_command_split) > 2:
+              toRemove = int(user_command_split[2])
+
+              if len(comp.consolemonitor.filters) > toRemove:
+                comp.consolemonitor.filters.pop(toRemove)
+              else:
+                comp.listwalker.append(urwid.Text(('logged_response', 'filter out of range')))
+                comp.listbox.autoscroll()
 
     def gcl(self, comp):
         control_points = int(comp.getApiClient().me()['gcl'])
