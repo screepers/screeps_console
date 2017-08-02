@@ -10,6 +10,7 @@ import urwid
 
 
 class Processor(object):
+    shard = 'shard0'
     lastkey = False
     apiclient = False
     aliases = {
@@ -118,7 +119,7 @@ class Processor(object):
             self.listbox.scrollBottom()
             userInput.set_edit_text('')
             apiclient = self.getApiClient()
-            apiclient.console(user_text)
+            apiclient.console(user_text, self.shard)
 
     def onTab(self, key):
         self.autocomplete.complete()
@@ -266,6 +267,36 @@ class Builtin(object):
         comp.listwalker.append(urwid.Text(('logged_response', 'reconnecting')))
         comp.listbox.autoscroll()
 
+    def shard(self, comp):
+        userInput = comp.edit
+        user_text = userInput.get_edit_text()
+        user_command_split = user_text.split(' ')
+
+        if len(user_command_split) < 2 or user_command_split[1] == 'current':
+            comp.listwalker.appendText(comp.shard)
+            return
+
+        if user_command_split[1] == 'clear':
+            comp.consolemonitor.focus = False
+            comp.listwalker.appendText('Clearing shard settings')
+            return
+
+        if user_command_split[1] == 'focus':
+            if len(user_command_split) < 3:
+                comp.consolemonitor.focus = False
+                comp.listwalker.appendText('Disabled shard focus')
+            else:
+                shard = user_command_split[2]
+                comp.consolemonitor.focus = shard
+                comp.shard = shard
+                message = 'Enabled shard focus on %s' % (shard)
+                comp.listwalker.appendText(message)
+            return
+
+        comp.shard = user_command_split[1]
+        response = 'Setting active shard to %s' % (comp.shard,)
+        comp.listwalker.appendText(response)
+
     def themes(self, comp):
         userInput = comp.edit
         user_text = userInput.get_edit_text()
@@ -277,7 +308,7 @@ class Builtin(object):
             for theme in theme_names:
                 theme_list = theme + '  ' + theme_list
 
-            comp.listwalker.append(urwid.Text(('logged_response', theme_list)))
+            comp.listwalker.appendText(theme_list)
             return
 
         if user_command_split[1] == 'test':
@@ -323,8 +354,8 @@ class Builtin(object):
                   (_(__/  ./     /                    \_\      \.
                          (_(___/                         \_____)_)
 '''
-        comp.listwalker.append(urwid.Text(('logged_response', turtle)))
-        comp.listwalker.append(urwid.Text(('logged_response', '')))
+        comp.listwalker.appendText(turtle)
+        comp.listwalker.appendText('')
 
     def whoami(self, comp):
         me = comp.getApiClient().me()['username']

@@ -46,6 +46,12 @@ class ScreepsConsole(screepsapi.Socket):
 
         data = json.loads(message)
 
+        if 'shard' in data[1]:
+            shard = data[1]['shard']
+        else:
+            shard = 'shard0'
+
+
         if 'messages' in data[1]:
             stream = []
 
@@ -56,7 +62,6 @@ class ScreepsConsole(screepsapi.Socket):
                 results = data[1]['messages']['results']
                 results = map(lambda x:'<type="result">'+x+'</type>',results)
                 stream = stream + results
-
 
             message_count = len(stream)
 
@@ -71,11 +76,11 @@ class ScreepsConsole(screepsapi.Socket):
 
                 for line in stream:
                     if self.format == 'color':
-                        line_parsed = parseLine(line)
+                        line_parsed = '%s: %s' % (shard, parseLine(line))
                     elif self.format == 'json':
-                        line_parsed = json.dumps(line)
+                        line_parsed = json.dumps({'line':line,'shard':shard})
                     else:
-                        line_parsed = tagLine(line)
+                        line_parsed = '%s: %s' % (shard, tagLine(line))
 
                     print line_parsed
                     sys.stdout.flush()
@@ -86,11 +91,11 @@ class ScreepsConsole(screepsapi.Socket):
                 #line = '<'+data[1]['error']
                 line = "<severity=\"5\" type=\"error\">" + data[1]['error'] + "</font>"
                 if self.format == 'color':
-                    line_parsed = parseLine(line)
+                    line_parsed = '%s: %s' % (shard, parseLine(line))
                 elif self.format == 'json':
-                    line_parsed = json.dumps(line)
+                    line_parsed = json.dumps({'line':line,'shard':shard})
                 else:
-                    line_parsed = tagLine(line)
+                    line_parsed = '%s: %s' % (shard, tagLine(line))
 
                 print line_parsed
                 return

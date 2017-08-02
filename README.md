@@ -98,6 +98,7 @@ commands however.
 * `list` - lists these and other built in commands and aliases.
 * `pause` - disables autoscrolling (hit enter on an empty terminal to reenable).
 * `reconnect` - reconnects the console to the Screeps server.
+* `shard` - controls the active shards.
 * `themes` - lists available themes when called without an argument, or switches.
   Otherwise switches themes when called with the theme name as the first
   argument.
@@ -110,18 +111,30 @@ Scrolling can be done one line at a time using `alt up` and `alt down`. Using
 `PageUp` and `PageDown` (FN+up and FN+down on Apple) can be used to scroll
 through the console buffer a bit quicker.
 
+## Shards
+
+By default all output from all shards is displayed and console commands go to
+shard0. This can be changed with the `shard` commands.
+
+* `shard` - by itself it outputs the shard that console input will go to.
+* `shard SHARDNAME` - changes the shard that console input goes to.
+* `shard focus SHARDNAME` - changes the console output and only displays
+  messages from this shard.
+* `shard clear` - display all output from all shards, but leave the console
+  input pointed at the same shard.
+
 
 ## Filters
 
 Console output can be filtered using regular expressions and the `filter`
 command. Only commands that match at least one filter will be displayed.
 
-`filter list` - this lists each current regex filter and its index.
-`filter add REGEX` - add a regular expression to the filter list.
-`filter clear` - remove all filters.
-`filter contains STRING` - add a filter that looks for log lines that contain the
-  supplied string.
-`filter remove INDEX` - remove a regular expression using it's index.
+* `filter list` - this lists each current regex filter and its index.
+* `filter add REGEX` - add a regular expression to the filter list.
+* `filter clear` - remove all filters.
+* `filter contains STRING` - add a filter that looks for log lines that contain
+  the supplied string.
+* `filter remove INDEX` - remove a regular expression using it's index.
 
 
 ## Colors and Severity

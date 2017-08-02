@@ -126,6 +126,10 @@ class consoleWidget(urwid.ListBox):
 
 
 class consoleWalker(urwid.SimpleListWalker):
+
+    def appendText(self, message, format='logged_response'):
+        self.append(urwid.Text((format, message)))
+
     def append(self, value):
         if(len(self) >= self.max_buffer):
             self.pop(0)
@@ -234,6 +238,7 @@ class ScreepsConsoleMonitor:
 
     proc = False
     quiet = False
+    focus = False
     filters = []
 
     def __init__(self, widget, walker, loop):
@@ -293,9 +298,16 @@ class ScreepsConsoleMonitor:
                 if len(line_json) <= 0:
                     continue
                 try:
-                    line = json.loads(line_json.strip())
+                    line_data = json.loads(line_json.strip())
+                    line = line_data['line']
+                    shard = line_data['shard']
+
+                    if self.focus and self.focus != line_data['shard']:
+                        continue
+
+
                 except:
-                    print line_json                   
+                    print line_json
                     logging.exception('error processing data: ' + line_json)
                     continue
 
@@ -339,7 +351,7 @@ class ScreepsConsoleMonitor:
                     if not has_match:
                         continue
 
-                self.walker.append(urwid.Text((formatting, line)))
+                self.walker.append(urwid.Text((formatting, '%s: %s' % (shard, line))))
                 self.widget.autoscroll()
 
             except:
