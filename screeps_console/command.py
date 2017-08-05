@@ -1,8 +1,7 @@
 
 from autocomplete import Autocomplete
 import calendar
-import screepsapi
-from settings import getSettings
+import settings
 import re
 from themes import themes
 import time
@@ -19,7 +18,8 @@ class Processor(object):
         'help': 'list'
     }
 
-    def __init__(self):
+    def __init__(self, connectionname):
+        self.connectionname = connectionname
         self.lastkeytime = 0
         self.listbox = False
         self.listwalker = False
@@ -28,6 +28,7 @@ class Processor(object):
         self.getApiClient()
         self.autocomplete = Autocomplete(self)
 
+
     def setDisplayWidgets(self, loop, frame, listbox, listwalker, edit, consolemonitor):
         self.listbox = listbox # console
         self.listwalker = listwalker
@@ -35,15 +36,10 @@ class Processor(object):
         self.loop = loop
         self.consolemonitor = consolemonitor
 
+
     def getApiClient(self):
-        if not self.apiclient:
-            settings = getSettings()
-            self.apiclient = screepsapi.API(
-                           u=settings['screeps_username'],
-                           p=settings['screeps_password'],
-                           ptr=settings['screeps_ptr'],
-                           host=settings['screeps_host'])
-        return self.apiclient
+        return settings.getApiClient(self.connectionname)
+
 
     def onInput(self, key):
 
@@ -85,6 +81,7 @@ class Processor(object):
 
 
         return
+
 
     def onEnter(self, key):
         self.listbox.setAutoscroll(True)

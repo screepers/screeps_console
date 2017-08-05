@@ -24,61 +24,75 @@ Note: This application requires Python 2, not 3.
 1. Determine where your Python is installed with `which python` - assume it is `/path/to/python` and replace that below
 1. Set up the `virtualenv` with the command `virtualenv -p /path/to/python env`
 1. Use that new `virtualenv` with the command `source env/bin/activate`
-2. Run `make`
-3. Run `make install`
-4. Create settings (as per the instructions below)
-5. Run `screepsconsole` from inside the terminal
+1. Run `make`
+1. Run `make install`
+1. Run `screepsconsole` from inside the terminal
 
 
 ## Settings
 
-The settings file is a yaml file. Begin by copying the settings.dist file to
-.settings.yaml in the directory you will be calling the shell from, or you can
-store the file in your home directory.
+The settings file is created automatically and placed in `~.screepsconsole.yaml`.
 
-```
-cp .settings.dist.yaml ~/.screeps_settings.yaml
-```
-
-The settings file is in yaml and takes various authentication tokens.
-
-```yaml
-# Copy this to .settings.yaml and fill it out.
-
-# Screeps account info
-# Your username is your full email address.
-screeps_username:
-screeps_password:
-screeps_ptr: false
-
-# Proxy configuration
-http_proxy:
-http_proxy_port:
-```
+Typically there is little reason to edit it manually. When you attempt to connect
+to a server for the first time it will ask for your credentials (and if it's a
+private server for the host), which will then be saved for future use.
 
 
 ## Launching
 
-To stream the console output directly to your terminal's stdout run the
-`console.py` application.
-
-```bash
-$ ./screeps_console/console.py
-```
-
-This project also offers an interactive shell that can be used for both reading
-console output and sending console commands to the server.
-
-If you've installed using the provided make file you can launch
+The interactive shell can be used for both reading console output and sending
+console commands to the server.
 
 ```bash
 $ screepsconsole
+```
+
+By default it connects to the main server, but it can also connect to PTR.
+
+```bash
+$ screepsconsole ptr
+```
+
+The system also works with private servers. Any label can be used, and unlike
+the main server the system will ask for a host (include the port) and whether
+the shard uses https.
+
+```bash
+$ screepsconsole screepsplus
+```
+
+It is possible to clear a saved connection.
+
+```bash
+$ screepsconsole clear connectionname
 ```
 
 You can also call the python script directly.
 
 ```bash
 $ ./screeps_console/interactive.py
+```
+
+
+## Streaming Console
+
+To stream the console output directly to your terminal's stdout without the
+ability to send command use the `console.py` application.
+
+```bash
+$ ./screeps_console/console.py
+```
+
+Like the Interactive version different servers can be specified.
+
+```bash
+$ ./screeps_console/console.py ptr
+```
+
+The output can also be sent in JSON.
+
+```bash
+$ ./screeps_console/console.py main json
 ```
 
 
