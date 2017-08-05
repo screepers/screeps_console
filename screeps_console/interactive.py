@@ -8,7 +8,7 @@ import os
 from os.path import expanduser
 import outputparser
 import re
-from settings import getSettings
+import settings
 import signal
 import subprocess
 import sys
@@ -23,15 +23,17 @@ class ScreepsInteractiveConsole:
     userInput = False
     consoleMonitor = False
 
-    def __init__(self):
+    def __init__(self, connection_name):
         try:
+            self.connection_name = connection_name
             frame = self.getFrame()
             comp = self.getCommandProcessor()
             self.loop = urwid.MainLoop(urwid.AttrMap(frame, 'bg'),
                                         unhandled_input=comp.onInput,
                                         palette=themes['dark'])
 
-            self.consoleMonitor = ScreepsConsoleMonitor(self.consoleWidget,
+            self.consoleMonitor = ScreepsConsoleMonitor(connection_name,
+                                                        self.consoleWidget,
                                                         self.listWalker,
                                                         self.loop)
 
@@ -56,7 +58,6 @@ class ScreepsInteractiveConsole:
         return frame_widget
 
 
-
     def getHeader(self):
         return urwid.AttrMap(urwid.Text("Screeps Interactive Console", align='center'), 'header')
 
@@ -73,16 +74,16 @@ class ScreepsInteractiveConsole:
     def getConsoleListWalker(self):
         if not self.listWalker:
             self.listWalker = consoleWalker([self.getWelcomeMessage()])
-            settings = getSettings()
-            if 'max_buffer' in settings:
-                self.listWalker.max_buffer = settings['max_buffer']
+            config = settings.getSettings()
+            if 'max_buffer' in config:
+                self.listWalker.max_buffer = config['max_buffer']
             else:
                 self.listWalker.max_buffer = 200000
 
         return self.listWalker
 
     def getCommandProcessor(self):
-        return command.Processor()
+        return command.Processor(self.connection_name)
 
     def getWelcomeMessage(self):
         return urwid.Text(('default', 'Welcome to the Screeps Interactive Console'))
@@ -167,9 +168,9 @@ class consoleEdit(urwid.Edit):
             file_contents = myfile.read()
             file_contents_line = file_contents.splitlines()
             num_lines = len(file_contents_line)
-            settings = getSettings()
-            if 'max_history' in settings:
-                max_scroll = settings['max_history']
+            config = settings.getSettings()
+            if 'max_history' in config:
+                max_scroll = config['max_history']
             else:
                 max_scroll = 200000
 
@@ -241,7 +242,8 @@ class ScreepsConsoleMonitor:
     focus = False
     filters = []
 
-    def __init__(self, widget, walker, loop):
+    def __init__(self, connectionname, widget, walker, loop):
+        self.connectionname = connectionname
         self.widget = widget
         self.walker = walker
         self.loop = loop
@@ -255,7 +257,7 @@ class ScreepsConsoleMonitor:
         console_path = os.path.join(os.path.dirname(sys.argv[0]), 'console.py ')
         write_fd = self.loop.watch_pipe(self.onUpdate)
         self.proc = subprocess.Popen(
-            [console_path + ' json'],
+            [console_path + ' ' + self.connectionname + ' json'],
             stdout=write_fd,
             preexec_fn=os.setsid,
             close_fds=True,
@@ -366,4 +368,46 @@ class ScreepsConsoleMonitor:
 
 
 if __name__ == "__main__":
-    ScreepsInteractiveConsole()
+
+    if len(sys.argv) < 2:
+        server = 'main'
+    else:
+        server = sys.argv[1]
+
+    if server == 'clear':
+        if len(sys.argv) < 3:
+            server = 'main'
+        else:
+            server = sys.argv[2]
+        settings.removeConnection(server)
+        sys.exit(0)
+
+    connectionSettings = settings.getConnection(server)
+
+    if not connectionSettings:
+        if server == 'main' or server == 'ptr':
+            legacyConfig = settings.getLegacySettings()
+            if legacyConfig:
+                if raw_input("Upgrade settings file to the new format? (y/n) ") != "y":
+                    sys.exit(-1)
+                settings.addConnection('main', legacyConfig['screeps_username'], legacyConfig['screeps_password'])
+                config = settings.getSettings()
+                config['smooth_scroll'] = legacyConfig['smooth_scroll']
+                config['max_scroll'] = legacyConfig['max_scroll']
+                config['max_history'] = legacyConfig['max_history']
+                settings.saveSettings(config)
+                connectionSettings = settings.getConnection(server)
+
+    if not connectionSettings:
+        if server is 'main':
+            host = 'screeps.com'
+            secure = True
+        else:
+            host = raw_input("Host: ")
+            secure = raw_input("Secure (y/n) ") == "y"
+        username = raw_input("Username: ")
+        password = raw_input("Password: ")
+        settings.addConnection(server, username, password, host, secure)
+
+
+    ScreepsInteractiveConsole(server)

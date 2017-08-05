@@ -7,7 +7,7 @@ import logging
 from outputparser import parseLine
 from outputparser import tagLine
 import screepsapi
-from settings import getSettings
+import settings
 from time import sleep
 import websocket
 from StringIO import StringIO
@@ -43,7 +43,6 @@ class ScreepsConsole(screepsapi.Socket):
             except:
                 print("Unexpected error:", sys.exc_info())
                 return
-
         data = json.loads(message)
 
         if 'shard' in data[1]:
@@ -66,8 +65,9 @@ class ScreepsConsole(screepsapi.Socket):
             message_count = len(stream)
 
             if message_count > 0:
+                config = settings.getSettings()
                 # Make sure the delay doesn't cause an overlap into other ticks
-                if 'smooth_scroll' in settings and settings['smooth_scroll'] is True:
+                if 'smooth_scroll' in config and config['smooth_scroll'] is True:
                     message_delay = 0.2 / message_count
                     if message_delay > 0.07:
                         message_delay = 0.07
@@ -111,14 +111,18 @@ class ScreepsConsole(screepsapi.Socket):
 
 if __name__ == "__main__":
 
-    opts, args = getopt.getopt(sys.argv[1:], "hi:o:",["ifile=","ofile="])
-    settings = getSettings()
-    screepsconsole = ScreepsConsole(user=settings['screeps_username'], password=settings['screeps_password'], ptr=settings['screeps_ptr'], host=settings['screeps_host'])
+    if len(sys.argv) < 2:
+        server = 'main'
+    else:
+        server = sys.argv[1]
 
-    if len(sys.argv) > 1:
-        if sys.argv[1] == 'interactive':
+    config = settings.getConnection(server)
+    screepsconsole = ScreepsConsole(user=config['username'], password=config['password'], secure=config['secure'], host=config['host'])
+
+    if len(sys.argv) > 2:
+        if sys.argv[2] == 'interactive':
             screepsconsole.format = 'tag'
-        if sys.argv[1] == 'json':
+        if sys.argv[2] == 'json':
             screepsconsole.format = 'json'
 
     screepsconsole.start()
