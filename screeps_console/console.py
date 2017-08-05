@@ -24,7 +24,7 @@ class ScreepsConsole(screepsapi.Socket):
 
 
     def on_close(self, ws):
-        print "### closed ###"
+        print("### closed ###")
         self.disconnect()
 
 
@@ -82,7 +82,7 @@ class ScreepsConsole(screepsapi.Socket):
                     else:
                         line_parsed = '%s: %s' % (shard, tagLine(line))
 
-                    print line_parsed
+                    print(line_parsed)
                     sys.stdout.flush()
                     sleep(message_delay) # sleep for smoother scrolling
             return
@@ -97,11 +97,11 @@ class ScreepsConsole(screepsapi.Socket):
                 else:
                     line_parsed = '%s: %s' % (shard, tagLine(line))
 
-                print line_parsed
+                print(line_parsed)
                 return
             else:
-                print 'undiscovered protocol feature'
-                print json.dumps(message)
+                print('undiscovered protocol feature')
+                print(json.dumps(message))
 
         print('on_message', message)
 

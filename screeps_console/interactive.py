@@ -309,7 +309,7 @@ class ScreepsConsoleMonitor:
 
 
                 except:
-                    print line_json
+                    print(line_json)
                     logging.exception('error processing data: ' + line_json)
                     continue
 
