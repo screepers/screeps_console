@@ -20,16 +20,16 @@ class Autocomplete(object):
     def loadList(self, listname):
 
         if not listname in self.lists:
-            autocomplete = pkg_resources.resource_string(__name__, 'data/autocomplete/' + listname + '.dat')
+            autocomplete = pkg_resources.resource_string(__name__, 'data/autocomplete/' + listname + '.dat').decode("utf-8")
             autocomplete_list = autocomplete.splitlines()
             autocomplete_list_unique = self.sortList(autocomplete_list)
             self.lists[listname] = autocomplete_list_unique
         return self.lists[listname]
 
 
-    def sortList(self, list):
-        autocomplete_list_filtered = [x for x in list if not x.startswith('#') and x != '']
-        autocomplete_list_unique = {}.fromkeys(autocomplete_list_filtered).keys()
+    def sortList(self, lst):
+        autocomplete_list_filtered = [x for x in lst if not x.startswith('#') and x != '']
+        autocomplete_list_unique = list({}.fromkeys(autocomplete_list_filtered).keys())
         autocomplete_list_unique.sort()
         return autocomplete_list_unique
 
