@@ -28,9 +28,8 @@ class Autocomplete(object):
 
 
     def sortList(self, lst):
-        autocomplete_list_filtered = [x for x in lst if not x.startswith('#') and x != '']
-        autocomplete_list_unique = list({}.fromkeys(autocomplete_list_filtered).keys())
-        autocomplete_list_unique.sort()
+        autocomplete_list_filtered = (x for x in lst if not x.startswith('#') and x != '')
+        autocomplete_list_unique = sorted(set(autocomplete_list_filtered))
         return autocomplete_list_unique
 
 
