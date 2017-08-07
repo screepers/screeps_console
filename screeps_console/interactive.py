@@ -290,7 +290,7 @@ class ScreepsConsoleMonitor:
             self.buffer += data.decode("utf-8")
             return
         if len(self.buffer) > 0:
-            data = self.buffer + data
+            data = self.buffer + data.decode("utf-8")
             self.buffer = ''
         data_lines = data.decode("utf-8").rstrip().split('\n')
         for line_json in data_lines:
