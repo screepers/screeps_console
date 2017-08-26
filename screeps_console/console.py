@@ -1,16 +1,13 @@
 #!/usr/bin/env python
 
 from base64 import b64decode
-import getopt
 import json
-import logging
 from outputparser import parseLine
 from outputparser import tagLine
 import screepsapi
 import settings
 from time import sleep
 import websocket
-from StringIO import StringIO
 import sys
 import zlib
 
@@ -43,6 +40,7 @@ class ScreepsConsole(screepsapi.Socket):
             except:
                 print("Unexpected error:", sys.exc_info())
                 return
+
         data = json.loads(message)
 
         if 'shard' in data[1]:
@@ -54,13 +52,14 @@ class ScreepsConsole(screepsapi.Socket):
         if 'messages' in data[1]:
             stream = []
 
-            if 'log' in data[1]['messages']:
-                stream = stream + data[1]['messages']['log']
+            messages = data[1]["messages"]
+            if 'log' in messages:
+                stream.extend(messages['log'])
 
-            if 'results' in data[1]['messages']:
-                results = data[1]['messages']['results']
+            if 'results' in messages:
+                results = messages['results']
                 results = map(lambda x:'<type="result">'+x+'</type>',results)
-                stream = stream + results
+                stream.extend(results)
 
             message_count = len(stream)
 

@@ -257,7 +257,7 @@ class ScreepsConsoleMonitor:
         console_path = os.path.join(os.path.dirname(sys.argv[0]), 'console.py ')
         write_fd = self.loop.watch_pipe(self.onUpdate)
         self.proc = subprocess.Popen(
-            [console_path + ' ' + self.connectionname + ' json'],
+            [sys.executable + ' ' + console_path + ' ' + self.connectionname + ' json'],
             stdout=write_fd,
             preexec_fn=os.setsid,
             close_fds=True,
@@ -278,25 +278,23 @@ class ScreepsConsoleMonitor:
             self.proc = False
 
     def onUpdate(self, data):
-
         # If we lose the connection to the remote system close the console.
-        if data.startswith('### closed ###'):
+        if data.startswith(b'### closed ###'):
             self.proc = False
             self.getProcess()
             lostprocess_message = 'reconnecting to server . . .'
             self.walker.append(urwid.Text(('logged_response', lostprocess_message)))
             self.widget.set_focus(len(self.walker)-1)
             return
-        if data[-1:] != '\n':
-            self.buffer += data
+        if data[-1:] != b'\n':
+            self.buffer += data.decode("utf-8")
             return
         if len(self.buffer) > 0:
-            data = self.buffer + data
+            data = self.buffer + data.decode("utf-8")
             self.buffer = ''
-        data_lines = data.rstrip().split('\n')
+        data_lines = data.decode("utf-8").rstrip().split('\n')
         for line_json in data_lines:
             try:
-
                 if len(line_json) <= 0:
                     continue
                 try:
@@ -388,7 +386,7 @@ if __name__ == "__main__":
         if server == 'main' or server == 'ptr':
             legacyConfig = settings.getLegacySettings()
             if legacyConfig:
-                if raw_input("Upgrade settings file to the new format? (y/n) ") != "y":
+                if input("Upgrade settings file to the new format? (y/n) ") != "y":
                     sys.exit(-1)
                 settings.addConnection('main', legacyConfig['screeps_username'], legacyConfig['screeps_password'])
                 config = settings.getSettings()
@@ -403,10 +401,10 @@ if __name__ == "__main__":
             host = 'screeps.com'
             secure = True
         else:
-            host = raw_input("Host: ")
-            secure = raw_input("Secure (y/n) ") == "y"
-        username = raw_input("Username: ")
-        password = raw_input("Password: ")
+            host = input("Host: ")
+            secure = input("Secure (y/n) ") == "y"
+        username = input("Username: ")
+        password = input("Password: ")
         settings.addConnection(server, username, password, host, secure)
 
 
