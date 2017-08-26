@@ -16,7 +16,7 @@ any html tags and adds colors.
 
 ## Installation
 
-Note: This application requires Python 2, not 3.
+Note: This application runs on both Python 2 and Python 3.
 
 1. Make sure you have `pip` installed. On Mac OS X do `sudo easy_install pip`
 1. Make sure `virtualenv` is installed- `pip install virtualenv`
