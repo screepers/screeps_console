@@ -15,6 +15,8 @@ import sys
 from themes import themes
 import urwid
 
+if hasattr(__builtins__, 'raw_input'):
+    input = raw_input
 
 class ScreepsInteractiveConsole:
 
