@@ -61,7 +61,7 @@ class ScreepsInteractiveConsole:
 
 
     def getHeader(self):
-        return urwid.AttrMap(urwid.Text("Screeps Interactive Console", align='center'), 'header')
+        return urwid.AttrMap(urwid.Text("%s - Screeps Interactive Console" % (self.connection_name,), align='center'), 'header')
 
     def getEdit(self):
         if not self.userInput:
