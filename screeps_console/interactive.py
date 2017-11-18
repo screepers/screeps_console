@@ -335,6 +335,9 @@ class ScreepsConsoleMonitor:
 
                 if line.startswith('ScreepStats: Processed'):
                     return
+                
+                if line.startswith('STATS'):
+                    return
 
                 if log_type == 'log' and len(self.filters) > 0:
                     has_match = False
