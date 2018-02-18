@@ -1,8 +1,10 @@
+from collections import OrderedDict
+import json
 import os
 from os.path import expanduser
-import sys
 import yaml
 import screepsapi
+import requests
 
 
 userhome = expanduser('~')
@@ -43,7 +45,7 @@ def addConnection(name, username, password, host=False, secure=False):
     if name == 'main':
         secure = True
         host = 'screeps.com'
-        addConnection('ptr', username, password)
+        #addConnection('ptr', username, password)
     if name == 'ptr':
         secure = True
         host = 'screeps.com/ptr'
@@ -55,14 +57,47 @@ def addConnection(name, username, password, host=False, secure=False):
     if 'connections' not in settings:
         settings['connections'] = {}
 
-    settings['connections'][name] = {
-        'host': host,
-        'secure': secure,
-        'username': username,
-        'password': password
-    }
+    if name == 'main' or name == 'ptr':
+        token = getToken(username, password, host, secure)
+        settings['connections'][name] = {
+            'host': host,
+            'secure': secure,
+            'token': token
+        }
+    else:
+        settings['connections'][name] = {
+            'host': host,
+            'secure': secure,
+            'username': username,
+            'password': password
+        }
 
     saveSettings(settings)
+
+
+def getToken(username, password, host, secure):
+    if secure:
+        apiurl = 'https://%s/api/user/auth-token' % (host)
+    else:
+        apiurl = 'http://%s/api/user/auth-token' % (host)
+
+    authtype = {"type": "full",
+                "endpoints": {
+                    "GET /api/user/name": False,
+                    "GET /api/user/money-history": False,
+                    "GET /api/market/my-orders": False,
+                    "GET /api/user/memory": False,
+                    "GET /api/user/memory-segment": False,
+                    "POST /api/user/memory-segment": False},
+                "websockets": {
+                    "console": False,
+                    "rooms": False},
+                "memorySegments": ""
+               }
+    r = requests.post(apiurl, data=authtype, auth=(username, password))
+    r.raise_for_status()
+    apiret = json.loads(r.text, object_pairs_hook=OrderedDict)
+    return apiret['token']
 
 
 def removeConnection(name):
@@ -82,12 +117,19 @@ def saveSettings(settings):
 
 def getApiClient(name):
     settings = getConnection(name)
-    return screepsapi.API(
-                   u=settings['username'],
-                   p=settings['password'],
-                   host=settings['host'],
-                   secure=settings['secure'],
-                   )
+    if 'token' in settings:
+        return screepsapi.API(
+            token=settings['token'],
+            host=settings['host'],
+            secure=settings['secure'],
+        )
+    else:
+        return screepsapi.API(
+            u=settings['username'],
+            p=settings['password'],
+            host=settings['host'],
+            secure=settings['secure'],
+        )
 
 
 

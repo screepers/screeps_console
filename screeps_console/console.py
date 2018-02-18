@@ -116,7 +116,15 @@ if __name__ == "__main__":
         server = sys.argv[1]
 
     config = settings.getConnection(server)
-    screepsconsole = ScreepsConsole(user=config['username'], password=config['password'], secure=config['secure'], host=config['host'])
+
+    if server == 'main' and 'token' not in config:
+        settings.addConnection('main', config['username'], config['password'])
+        config = settings.getConnection(server)
+
+    if 'token' in config:
+        screepsconsole = ScreepsConsole(token=config['token'], secure=config['secure'], host=config['host'])
+    else:
+        screepsconsole = ScreepsConsole(user=config['username'], password=config['password'], secure=config['secure'], host=config['host'])
 
     if len(sys.argv) > 2:
         if sys.argv[2] == 'interactive':

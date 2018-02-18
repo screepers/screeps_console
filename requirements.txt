@@ -3,7 +3,7 @@ nose==1.3.7
 PyYAML>=3.12,<4
 requests>=2.18.3,<3
 Requires==0.0.3
-screepsapi>=0.4.2
+screepsapi>=0.5.1
 six>=1.10.0,<2
 urwid==1.3.1
 websocket-client==0.44.0

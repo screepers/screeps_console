@@ -37,6 +37,8 @@ Typically there is little reason to edit it manually. When you attempt to connec
 to a server for the first time it will ask for your credentials (and if it's a
 private server for the host), which will then be saved for future use.
 
+When using the "screeps.com" server the console will automatically create a
+token and use that instead of storing your credentials.
 
 ## Launching
 

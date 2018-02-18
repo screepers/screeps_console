@@ -391,15 +391,14 @@ if __name__ == "__main__":
         if server == 'main' or server == 'ptr':
             legacyConfig = settings.getLegacySettings()
             if legacyConfig:
-                if input("Upgrade settings file to the new format? (y/n) ") != "y":
-                    sys.exit(-1)
-                settings.addConnection('main', legacyConfig['screeps_username'], legacyConfig['screeps_password'])
-                config = settings.getSettings()
-                config['smooth_scroll'] = legacyConfig['smooth_scroll']
-                config['max_scroll'] = legacyConfig['max_scroll']
-                config['max_history'] = legacyConfig['max_history']
-                settings.saveSettings(config)
-                connectionSettings = settings.getConnection(server)
+                if input("Upgrade settings file to the new format? (y/n) ") == "y":
+                    settings.addConnection('main', legacyConfig['screeps_username'], legacyConfig['screeps_password'])
+                    config = settings.getSettings()
+                    config['smooth_scroll'] = legacyConfig['smooth_scroll']
+                    config['max_scroll'] = legacyConfig['max_scroll']
+                    config['max_history'] = legacyConfig['max_history']
+                    settings.saveSettings(config)
+                    connectionSettings = settings.getConnection(server)
 
     if not connectionSettings:
         if server is 'main':
@@ -412,5 +411,8 @@ if __name__ == "__main__":
         password = input("Password: ")
         settings.addConnection(server, username, password, host, secure)
 
+    if server == 'main' and 'token' not in connectionSettings:
+        settings.addConnection('main', connectionSettings['username'], connectionSettings['password'])
+        connectionSettings = settings.getConnection(server)
 
     ScreepsInteractiveConsole(server)
