@@ -371,7 +371,9 @@ class ScreepsConsoleMonitor:
 
 
 if __name__ == "__main__":
+    main()
 
+def main():
     if len(sys.argv) < 2:
         server = 'main'
     else:

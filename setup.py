@@ -13,6 +13,7 @@ config = {
     'install_requires': ['nose'],
     'packages': ['screeps_console'],
     'scripts': [],
+    'entry_points': {'console_scripts': ['screepsconsole = screeps_console.interactive:main']},
     'name': 'screeps_console'
 }
 
