@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 
 import atexit
-import command
+from . import command
 import json
 import logging
 import os
 from os.path import expanduser
-import outputparser
+from . import outputparser
 import re
-import settings
+from . import settings
 import signal
 import subprocess
 import sys
-from themes import themes
+from .themes import themes
 import urwid
 
 if hasattr(__builtins__, 'raw_input'):

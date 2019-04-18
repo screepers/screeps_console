@@ -2,10 +2,10 @@
 
 from base64 import b64decode
 import json
-from outputparser import parseLine
-from outputparser import tagLine
+from .outputparser import parseLine
+from .outputparser import tagLine
 import screepsapi
-import settings
+from . import settings
 from time import sleep
 import websocket
 import sys

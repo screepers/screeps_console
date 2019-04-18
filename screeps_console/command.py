@@ -1,9 +1,9 @@
 
-from autocomplete import Autocomplete
+from .autocomplete import Autocomplete
 import calendar
-import settings
+from . import settings
 import re
-from themes import themes
+from .themes import themes
 import time
 import urwid
 
