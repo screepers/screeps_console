@@ -166,7 +166,7 @@ The severity can be anywhere from 0 to 5, with five being the most extreme. In
 addition you can highlight a log line by giving it the 'type' of 'highlight'.
 
 ```
-<font color="#ffff00" type="highlight>This message will stand out!</font>
+<font color="#ffff00" type="highlight">This message will stand out!</font>
 ```
 
 If you do not care about coloring the web console output you can use a simpler
@@ -174,7 +174,7 @@ format.
 
 ```
 <log severity="2">Message goes here</log>
-<log type="highlight>This message will stand out!</log>
+<log type="highlight">This message will stand out!</log>
 ```
 
 An [example logger](docs/ExampleLogger.js) is included in the docs folder to
