@@ -22,7 +22,7 @@ def getSettings():
         saveSettings(settings)
         return settings
     with open(settingsfile, 'r') as f:
-        settings = yaml.load(f)
+        settings = yaml.safe_load(f)
     return settings
 
 

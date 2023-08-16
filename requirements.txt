@@ -1,9 +1,8 @@
 colorama==0.3.9
 nose==1.3.7
-PyYAML>=3.12,<4
+PyYAML>=6.0.1
 requests>=2.18.3,<3
-Requires==0.0.3
-screepsapi>=0.5.1
+screepsapi @ git+https://github.com/screepers/python-screeps@b4dd23c4d7d987ea73bfc53faca445abd4f5b58d
 six>=1.10.0,<2
-urwid==1.3.1
+urwid==2.1.2
 websocket-client==0.44.0

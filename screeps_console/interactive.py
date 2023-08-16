@@ -401,7 +401,7 @@ if __name__ == "__main__":
                     connectionSettings = settings.getConnection(server)
 
     if not connectionSettings:
-        if server is 'main':
+        if server == 'main':
             host = 'screeps.com'
             secure = True
         else:
