@@ -409,7 +409,8 @@ if __name__ == "__main__":
             secure = input("Secure (y/n) ") == "y"
         username = input("Username: ")
         password = input("Password: ")
-        settings.addConnection(server, username, password, host, secure)
+        token = input("Token: ")
+        settings.addConnection(server, username, password, token, host, secure)
 
     if server == 'main' and 'token' not in connectionSettings:
         settings.addConnection('main', connectionSettings['username'], connectionSettings['password'])
