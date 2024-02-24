@@ -22,7 +22,7 @@ def getSettings():
         saveSettings(settings)
         return settings
     with open(settingsfile, 'r') as f:
-        settings = yaml.load(f)
+        settings = yaml.safe_load(f)
     return settings
 
 
@@ -41,7 +41,7 @@ def getConnection(name):
     return settings['connections'][name]
 
 
-def addConnection(name, username, password, host=False, secure=False):
+def addConnection(name, username, password, token=False, host=False, secure=False):
     if name == 'main':
         secure = True
         host = 'screeps.com'
@@ -58,7 +58,7 @@ def addConnection(name, username, password, host=False, secure=False):
         settings['connections'] = {}
 
     if name == 'main' or name == 'ptr':
-        token = getToken(username, password, host, secure)
+        token = token if token else getToken(username, password, host, secure)
         settings['connections'][name] = {
             'host': host,
             'secure': secure,
